@@ -1,0 +1,21 @@
+{
+  "name": "space-invader",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "build": "tsc",
+    "build:css": "sass src/styles:dist/css",
+    "watch": "tsc --watch",
+    "watch:css": "sass --watch src/styles:dist/css",
+    "dev": "npm run watch & npm run watch:css"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "sass": "^1.77.5"
+  },
+  "dependencies": {
+    "typescript": "^5.8.3"
+  },
+  "description": ""
+}
