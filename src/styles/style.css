@@ -1,7 +1,16 @@
 
+*{
+    margin: 0;
+    padding: 0;
+}
+
 .game-container{
     border: 2px solid black;
     width: 750px;
     height: 500px;
     background: black;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: end;
 }

@@ -3,13 +3,14 @@ import { Player } from './player.js'
 const body = document.querySelector('body');
 const gameContainer = document.getElementById('gameTarget');
 const plyrShip = document.createElement('div');
+plyrShip.id = "plyrShip";
 
-let test = new Player('50', '50', 'yellow');
-test.createPlayer(plyrShip, gameContainer);
-console.log(test);
+let player = new Player('50', '50', 'yellow');
+player.createPlayer(plyrShip, gameContainer);
+console.log(player);
 console.log(gameContainer?.children);
 
-body?.addEventListener('keydown', (e) => {test.playerMove(e)});
+body?.addEventListener('keydown', (e) => {player.playerMove(e, plyrShip)});
 
 
 
