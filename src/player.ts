@@ -8,9 +8,13 @@ export class Player {
     speed: number;
 
     life: number;
+    isAlive: boolean;
 
     playerPositionY: number;
     gameBoardSizeLeft: number;
+
+    baselineHitBox: HTMLElement;
+
 
     constructor(witdh: string, heigth: string, color: string) {
         this.witdh = (witdh + 'px');
@@ -22,9 +26,18 @@ export class Player {
         this.speed = 5;
 
         this.life = 5;
+        this.isAlive = true;
 
         this.playerPositionY = 0;
         this.gameBoardSizeLeft = 0;
+
+        this.baselineHitBox = document.createElement('div');
+        this.baselineHitBox.style.height = `${this.height}`;
+        this.baselineHitBox.style.width = `750px`;
+        this.baselineHitBox.style.position = 'absolute'
+        this.baselineHitBox.style.display = "flex";
+        this.baselineHitBox.style.borderTop = "2px";
+        this.baselineHitBox.style.borderTopColor = "pink";
     }
 
     /** Créer l'apparence du personnage en recevant la zone de jeu et en en y ajoutant un
@@ -45,12 +58,23 @@ export class Player {
             this.gameBoardSizeLeft = target.getBoundingClientRect().width;
 
             console.log(`Game board size : ${this.gameBoardSizeLeft}`)
-            return;
         }
         else {
             console.log(`Erreur l élément ${element} et ${target} n'existent pas`)
             return;
         }
+
+    }
+
+    createBaseLineHitBox(target: HTMLElement|null, element: HTMLElement) {
+        if (element != null && target != null) {
+            target.appendChild(element);
+        }
+    }
+
+    //RFetourne les informations concernant la hitbox
+    getBaseLineHitBox():HTMLElement{
+        return this.baselineHitBox;
     }
 
     /** Reçoit les touches utilisées par l'utilisateur et modifie sa position
@@ -78,9 +102,6 @@ export class Player {
                     player.style.left = `${this.playerPositionY}px`
                     console.log(`Nouvelle position Y : ${this.playerPositionY}`);
                 }
-                else {
-
-                }
             }
         }
 
@@ -89,7 +110,7 @@ export class Player {
         }
     }
 
-    playerShot(action: KeyboardEvent, player:HTMLElement) {
+    playerShot(action: KeyboardEvent, player: HTMLElement) {
         if (action.key == " ") {
             console.log("Feu !");
             let lazer = new Lazer(player, this.playerPositionY);

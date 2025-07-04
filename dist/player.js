@@ -8,8 +8,16 @@ export class Player {
         this.position = 'absolute';
         this.speed = 5;
         this.life = 5;
+        this.isAlive = true;
         this.playerPositionY = 0;
         this.gameBoardSizeLeft = 0;
+        this.baselineHitBox = document.createElement('div');
+        this.baselineHitBox.style.height = `${this.height}`;
+        this.baselineHitBox.style.width = `750px`;
+        this.baselineHitBox.style.position = 'absolute';
+        this.baselineHitBox.style.display = "flex";
+        this.baselineHitBox.style.borderTop = "2px";
+        this.baselineHitBox.style.borderTopColor = "pink";
     }
     /** Créer l'apparence du personnage en recevant la zone de jeu et en en y ajoutant un
      * élément visuel
@@ -26,12 +34,20 @@ export class Player {
             this.playerPositionY = element.getBoundingClientRect().left;
             this.gameBoardSizeLeft = target.getBoundingClientRect().width;
             console.log(`Game board size : ${this.gameBoardSizeLeft}`);
-            return;
         }
         else {
             console.log(`Erreur l élément ${element} et ${target} n'existent pas`);
             return;
         }
+    }
+    createBaseLineHitBox(target, element) {
+        if (element != null && target != null) {
+            target.appendChild(element);
+        }
+    }
+    //RFetourne les informations concernant la hitbox
+    getBaseLineHitBox() {
+        return this.baselineHitBox;
     }
     /** Reçoit les touches utilisées par l'utilisateur et modifie sa position
      * si le personnage n'entre pas en collision avec une bordure
@@ -56,8 +72,6 @@ export class Player {
                     this.playerPositionY -= this.speed;
                     player.style.left = `${this.playerPositionY}px`;
                     console.log(`Nouvelle position Y : ${this.playerPositionY}`);
-                }
-                else {
                 }
             }
         }

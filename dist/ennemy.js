@@ -1,5 +1,6 @@
-export class Ennemys {
+class Ennemys {
     constructor() {
+        this.hitBox = document.createElement('div');
         this.isAlive = true;
         this.witdh = 25;
         this.height = 25;
@@ -25,14 +26,23 @@ export class Ennemys {
                     ennemyElement.style.height = `${this.height}px`;
                     ennemyElement.style.backgroundColor = 'red';
                     ennemyElement.style.display = "flex";
+                    ennemyElement.style.alignItems = "end";
                     target.appendChild(ennemyElement);
+                    this.hitBox = document.createElement('div');
+                    this.hitBox.id = 'hitbox';
+                    this.hitBox.style.width = `${this.witdh}px`;
+                    this.hitBox.style.height = '10px';
+                    this.hitBox.style.backgroundColor = 'green';
+                    ennemyElement.appendChild(this.hitBox);
                     console.log(`${i} éléménts crées sur ${numberOf}`);
                 }
             }
         }
     }
 }
-/**  */
+/** Créer un conteneur pour les ennemis dans lequel ils apparaissent
+ * Gère aussi le déplacement du conteneur
+*/
 export class EnnemyContainer {
     /** Créer un objet conteneur qui contiendra les ennemis
      * Ajoute ensuite les ennemis à la gameBoard en créant
@@ -48,6 +58,7 @@ export class EnnemyContainer {
         this.ennemyContainerTop = `25px`;
         this.ennemyContainerGap = '25px';
         this.ennemyContainerPositionY = 0;
+        this.bounceOnBorder = 0;
         this.ennemyContainerSizeLeft = 0;
         this.direction = 1;
         this.ennemyContainerElement = document.createElement('div');
@@ -72,6 +83,7 @@ export class EnnemyContainer {
      */
     containerMove(containerElement) {
         let positionX = parseInt(containerElement.style.left || "0", 10);
+        let positionY = parseInt(containerElement.style.top || "0", 10);
         const gameTarget = document.getElementById('gameTarget');
         if (!gameTarget)
             return;
@@ -86,12 +98,28 @@ export class EnnemyContainer {
         if (positionX >= maxX) {
             this.direction = -1;
             positionX = maxX;
+            this.bounceOnBorder += 1;
+            console.log(`bounce : ${this.bounceOnBorder}`);
+            if (this.bounceOnBorder == 1) {
+                positionY += 10;
+                this.bounceOnBorder = 0;
+            }
         }
         if (positionX <= minX) {
             this.direction = 1;
             positionX = minX;
+            this.bounceOnBorder += 1;
+            console.log(`bounce : ${this.bounceOnBorder}`);
+            if (this.bounceOnBorder == 1) {
+                positionY += 20;
+                this.bounceOnBorder = 0;
+            }
         }
         containerElement.style.left = `${positionX}px`;
+        containerElement.style.top = `${positionY}px`;
         setTimeout(() => this.containerMove(containerElement), 100);
+    }
+    getContainerInformation() {
+        return this.ennemyContainerElement;
     }
 }

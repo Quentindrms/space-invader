@@ -1,12 +1,14 @@
-export class Ennemys {
+class Ennemys {
     isAlive: boolean;
     witdh: number;
     height: number;
     //numberOf: number;
     typeOf: HTMLElement;
     target: HTMLElement | null;
+    hitBox: HTMLElement | null;
 
     constructor() {
+        this.hitBox = document.createElement('div');
         this.isAlive = true;
         this.witdh = 25;
         this.height = 25;
@@ -21,7 +23,7 @@ export class Ennemys {
      * ennemis sont ensuites ajoutés, le nombre d'ennemi dépend de la valeur passée en 
      * paramètre (NumberOf)
      */
-    createEnnemy(target: HTMLElement | null, numberOf: number) {
+    public createEnnemy(target: HTMLElement | null, numberOf: number) {
         if (target != null) {
             /** Ajoute le nombre d'ennemis reçu en paramètre de la fonction et les ajoutes dans ennemyContainer */
             for (let i = 0; i < numberOf; i++) {
@@ -35,8 +37,15 @@ export class Ennemys {
                     ennemyElement.style.height = `${this.height}px`;
                     ennemyElement.style.backgroundColor = 'red';
                     ennemyElement.style.display = "flex";
+                    ennemyElement.style.alignItems = "end";
 
                     target.appendChild(ennemyElement);
+                    this.hitBox = document.createElement('div');
+                    this.hitBox.id = 'hitbox';
+                    this.hitBox.style.width = `${this.witdh}px`
+                    this.hitBox.style.height = '10px';
+                    this.hitBox.style.backgroundColor = 'green';
+                    ennemyElement.appendChild(this.hitBox);
 
                     console.log(`${i} éléménts crées sur ${numberOf}`)
                 }
@@ -45,7 +54,9 @@ export class Ennemys {
     }
 }
 
-/**  */
+/** Créer un conteneur pour les ennemis dans lequel ils apparaissent
+ * Gère aussi le déplacement du conteneur 
+*/
 
 export class EnnemyContainer {
     ennemyContainerWidth: string | null;
@@ -63,6 +74,7 @@ export class EnnemyContainer {
 
     ennemy: Ennemys;
     direction: number;
+    bounceOnBorder: number;
 
     intervalID: number;
 
@@ -82,6 +94,7 @@ export class EnnemyContainer {
         this.ennemyContainerTop = `25px`;
         this.ennemyContainerGap = '25px';
         this.ennemyContainerPositionY = 0;
+        this.bounceOnBorder = 0;
 
         this.ennemyContainerSizeLeft = 0;
         this.direction = 1;
@@ -93,7 +106,7 @@ export class EnnemyContainer {
     }
 
     /** Créer le conteneur */
-    createContainer() {
+    private createContainer() {
         this.ennemyContainerElement.style.width = `${this.ennemyContainerWidth}`;
         this.ennemyContainerElement.style.height = this.ennemyContainerHeight;
         this.ennemyContainerElement.style.display = this.ennemyContainerDisplay;
@@ -110,34 +123,52 @@ export class EnnemyContainer {
     /** Déplace le conteneur sur l'axe principale et l'axe secondaire suivant un patern prédéfinit
      * Reçoit l'emplacement du conteneur en paramètre 
      */
-containerMove(containerElement: HTMLElement) {
-    let positionX: number = parseInt(containerElement.style.left || "0", 10);
+    private containerMove(containerElement: HTMLElement) {
+        let positionX: number = parseInt(containerElement.style.left || "0", 10);
+        let positionY: number = parseInt(containerElement.style.top || "0", 10);
 
-    const gameTarget = document.getElementById('gameTarget');
-    if (!gameTarget) return;
+        const gameTarget = document.getElementById('gameTarget');
+        if (!gameTarget) return;
 
-    const gameTargetRect = gameTarget.getBoundingClientRect();
-    const containerRect = containerElement.getBoundingClientRect();
+        const gameTargetRect = gameTarget.getBoundingClientRect();
+        const containerRect = containerElement.getBoundingClientRect();
 
-    //Détermine la les bords 
-    const maxX = gameTargetRect.width - containerRect.width; 
-    const minX = 10;
+        //Détermine la les bords 
+        const maxX = gameTargetRect.width - containerRect.width;
+        const minX = 10;
 
-    // Déplacement selon la direction
-    positionX += 5 * this.direction;
+        // Déplacement selon la direction
+        positionX += 5 * this.direction;
 
-    // Inversion de direction aux bords
-    if (positionX >= maxX) {
-        this.direction = -1;
-        positionX = maxX;
+        // Inversion de direction aux bords
+        if (positionX >= maxX) {
+            this.direction = -1;
+            positionX = maxX;
+            this.bounceOnBorder += 1
+            console.log(`bounce : ${this.bounceOnBorder}`)
+            if (this.bounceOnBorder == 1) {
+                positionY += 10;
+                this.bounceOnBorder = 0;
+            }
+        }
+        if (positionX <= minX) {
+            this.direction = 1;
+            positionX = minX;
+            this.bounceOnBorder += 1;
+            console.log(`bounce : ${this.bounceOnBorder}`)
+            if (this.bounceOnBorder == 1) {
+                positionY += 20;
+                this.bounceOnBorder = 0;
+            }
+        }
+
+        containerElement.style.left = `${positionX}px`;
+        containerElement.style.top = `${positionY}px`;
+
+        setTimeout(() => this.containerMove(containerElement), 100);
     }
-    if (positionX <= minX) {
-        this.direction = 1;
-        positionX = minX;
+
+    public getContainerInformation():HTMLElement{
+       return this.ennemyContainerElement
     }
-
-    containerElement.style.left = `${positionX}px`;
-
-    setTimeout(() => this.containerMove(containerElement), 100);
-}
 }
