@@ -1,16 +1,26 @@
 import { Player } from './player.js'
+import { Ennemys } from './ennemy.js';
+import { EnnemyContainer } from './ennemy.js';
 
 const body = document.querySelector('body');
 const gameContainer = document.getElementById('gameTarget');
 const plyrShip = document.createElement('div');
+const ennemy = document.createElement('div')
 plyrShip.id = "plyrShip";
 
 let player = new Player('50', '50', 'yellow');
+
+if (gameContainer != null) {
+let ennemyContainer = new EnnemyContainer(gameContainer);
+}
+
+
 player.createPlayer(plyrShip, gameContainer);
 console.log(player);
 console.log(gameContainer?.children);
 
-body?.addEventListener('keydown', (e) => {player.playerMove(e, plyrShip)});
+body?.addEventListener('keydown', (e) => { player.playerMove(e, plyrShip) });
+body?.addEventListener('keyup', (e) => { player.playerShot(e, plyrShip) })
 
 
 

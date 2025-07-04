@@ -4,7 +4,7 @@ export class Player {
         this.height = (heigth + 'px');
         this.color = color;
         this.display = "flex";
-        this.align = 'flex-end';
+        this.align = '';
         this.position = 'absolute';
         this.speed = 5;
         this.life = 5;
@@ -61,12 +61,14 @@ export class Player {
                 }
             }
         }
-        else if (mvt.key == " ") {
-            console.log("Feu !");
-            let lazer = new Lazer(player, this.playerPositionY);
-        }
         else {
             console.log(mvt);
+        }
+    }
+    playerShot(action, player) {
+        if (action.key == " ") {
+            console.log("Feu !");
+            let lazer = new Lazer(player, this.playerPositionY);
         }
     }
     /** Vérifie si le personnage touche les bords, retourne true en cas de collision */
@@ -86,31 +88,42 @@ export class Player {
 }
 class Lazer {
     constructor(player, playerPos) {
-        this.width = '10px';
+        this.width = '5px';
         this.height = '25px';
         this.backgroundColor = 'pink';
         this.position = 'absolute';
         this.playerPosition = playerPos;
-        this.beamPositionX = player.getBoundingClientRect().x;
+        this.beamPositionY = player.getBoundingClientRect().y - 25;
         this.beam = document.createElement('div');
         this.beam.style.width = this.width;
         this.beam.style.height = this.height;
         this.beam.style.backgroundColor = this.backgroundColor;
         this.beam.style.position = this.position;
         this.beam.style.left = `${this.playerPosition}px`;
-        this.beam.style.top = `${this.beamPositionX}px`;
-        this.beamSpeed = 200;
+        this.beam.style.top = `${this.beamPositionY}px`;
+        this.beamSpeed = 100;
         this.gameBoard = document.getElementById('gameTarget');
         if (this.gameBoard != null) {
             this.gameBoard.appendChild(this.beam);
             this.beam.id = "laser";
-            let positionX = this.beam.getBoundingClientRect().x;
-            window.setInterval(() => { this.movingLazer(positionX); }, this.beamSpeed);
+            console.log(`Position sur x : ${this.beamPositionY}`);
+            console.log(this.beam);
+            this.intervalID = window.setInterval(() => { this.movingLazer(this.beamPositionY); }, this.beamSpeed);
         }
     }
+    /** Déplace le laser vers le haut jusqu'à ce qu'il atteigne le bord supérieur
+     * Lorsque le laser atteitn x=0px le laser est automatiuqement supprimé
+    */
     movingLazer(position) {
-        console.log('Déplacementdu laser');
-        this.beamPositionX -= 10;
-        this.beam.style.top = `${this.beamPositionX}px`;
+        this.beamPositionY -= 10;
+        this.beam.style.top = `${this.beamPositionY}px`;
+        if (this.beamPositionY <= 0) {
+            if (this.beam.parentNode) { //Vérifie si l'élément à un parent
+                this.beam.parentNode.removeChild(this.beam); //Si oui, récupère le parent et supprime l'enfant
+            }
+            if (this.intervalID !== undefined) {
+                clearInterval(this.intervalID); //Arrête l'interval
+            }
+        }
     }
 }
