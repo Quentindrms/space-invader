@@ -20,7 +20,7 @@ body?.addEventListener('keyup', (e) => { player.playerShot(e, plyrShip) })
 
 if (gameContainer != null) {
 let ennemyContainer = new EnnemyContainer(gameContainer);
-let collision = new Collision(ennemyContainer.getContainerInformation(), player.getBaseLineHitBox());
+let collision = new Collision(ennemyContainer.getContainerInformation(), player.getBaseLineHitBox(), ennemyContainer, player);
 }
 
 

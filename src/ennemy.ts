@@ -1,5 +1,6 @@
 class Ennemys {
     isAlive: boolean;
+    canMoove: boolean;
     witdh: number;
     height: number;
     //numberOf: number;
@@ -12,6 +13,7 @@ class Ennemys {
         this.isAlive = true;
         this.witdh = 25;
         this.height = 25;
+        this.canMoove = true;
         //this.numberOf = numberOf
         this.target = document.getElementById('ennemyContainer');
         this.typeOf = document.createElement('div');
@@ -19,6 +21,7 @@ class Ennemys {
             this.createEnnemy(this.target, 1);
         }
     }
+
     /** Créer un ennemi en ajoutant un élément div 'ennemyContainer' dans lequel les
      * ennemis sont ensuites ajoutés, le nombre d'ennemi dépend de la valeur passée en 
      * paramètre (NumberOf)
@@ -102,7 +105,7 @@ export class EnnemyContainer {
         this.ennemyContainerElement = document.createElement('div');
         this.createContainer();
 
-        this.intervalID = window.setTimeout(() => this.containerMove(this.ennemyContainerElement), 1000);
+        this.intervalID = window.setInterval(() => this.containerMove(this.ennemyContainerElement), 100);
     }
 
     /** Créer le conteneur */
@@ -133,7 +136,7 @@ export class EnnemyContainer {
         const gameTargetRect = gameTarget.getBoundingClientRect();
         const containerRect = containerElement.getBoundingClientRect();
 
-        //Détermine la les bords 
+        //Détermine les bords 
         const maxX = gameTargetRect.width - containerRect.width;
         const minX = 10;
 
@@ -147,7 +150,7 @@ export class EnnemyContainer {
             this.bounceOnBorder += 1
             console.log(`bounce : ${this.bounceOnBorder}`)
             if (this.bounceOnBorder == 1) {
-                positionY += 10;
+                positionY += 100;
                 this.bounceOnBorder = 0;
             }
         }
@@ -165,10 +168,17 @@ export class EnnemyContainer {
         containerElement.style.left = `${positionX}px`;
         containerElement.style.top = `${positionY}px`;
 
-        setTimeout(() => this.containerMove(containerElement), 100);
+        // setTimeout(() => this.containerMove(containerElement), 100);
     }
 
-    public getContainerInformation():HTMLElement{
-       return this.ennemyContainerElement
+    public getContainerInformation(): HTMLElement {
+        return this.ennemyContainerElement
+    }
+
+    public stopMovement(bool: boolean) {
+        if (bool == true) {
+            clearInterval(this.intervalID);
+            console.log('Fin de la boucle mouvement sur les ennemis');
+        }
     }
 }

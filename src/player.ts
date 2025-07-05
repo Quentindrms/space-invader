@@ -176,6 +176,7 @@ class Lazer {
             this.intervalID = window.setInterval(() => { this.movingLazer(this.beamPositionY) }, this.beamSpeed)
         }
     }
+    
     /** Déplace le laser vers le haut jusqu'à ce qu'il atteigne le bord supérieur 
      * Lorsque le laser atteitn x=0px le laser est automatiuqement supprimé
     */

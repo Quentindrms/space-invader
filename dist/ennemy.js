@@ -4,6 +4,7 @@ class Ennemys {
         this.isAlive = true;
         this.witdh = 25;
         this.height = 25;
+        this.canMoove = true;
         //this.numberOf = numberOf
         this.target = document.getElementById('ennemyContainer');
         this.typeOf = document.createElement('div');
@@ -63,7 +64,7 @@ export class EnnemyContainer {
         this.direction = 1;
         this.ennemyContainerElement = document.createElement('div');
         this.createContainer();
-        this.intervalID = window.setTimeout(() => this.containerMove(this.ennemyContainerElement), 1000);
+        this.intervalID = window.setInterval(() => this.containerMove(this.ennemyContainerElement), 100);
     }
     /** Créer le conteneur */
     createContainer() {
@@ -89,7 +90,7 @@ export class EnnemyContainer {
             return;
         const gameTargetRect = gameTarget.getBoundingClientRect();
         const containerRect = containerElement.getBoundingClientRect();
-        //Détermine la les bords 
+        //Détermine les bords 
         const maxX = gameTargetRect.width - containerRect.width;
         const minX = 10;
         // Déplacement selon la direction
@@ -101,7 +102,7 @@ export class EnnemyContainer {
             this.bounceOnBorder += 1;
             console.log(`bounce : ${this.bounceOnBorder}`);
             if (this.bounceOnBorder == 1) {
-                positionY += 10;
+                positionY += 100;
                 this.bounceOnBorder = 0;
             }
         }
@@ -117,9 +118,15 @@ export class EnnemyContainer {
         }
         containerElement.style.left = `${positionX}px`;
         containerElement.style.top = `${positionY}px`;
-        setTimeout(() => this.containerMove(containerElement), 100);
+        // setTimeout(() => this.containerMove(containerElement), 100);
     }
     getContainerInformation() {
         return this.ennemyContainerElement;
+    }
+    stopMovement(bool) {
+        if (bool == true) {
+            clearInterval(this.intervalID);
+            console.log('Fin de la boucle mouvement sur les ennemis');
+        }
     }
 }
