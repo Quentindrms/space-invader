@@ -10,14 +10,6 @@ plyrShip.id = "plyrShip";
 
 let player = new Player('50', '50', 'yellow');
 
-if (gameContainer != null) {
-let ennemyContainer = new EnnemyContainer(gameContainer);
-console.log(`Container information : ${ennemyContainer.getContainerInformation()}`)
-let collision = new Collision();
-collision.setElement(ennemyContainer.getContainerInformation(), player.getBaseLineHitBox())
-collision.setPosition(ennemyContainer.getContainerInformation(), player.getBaseLineHitBox())
-}
-
 player.createPlayer(plyrShip, gameContainer);
 player.createBaseLineHitBox(gameContainer, player.baselineHitBox);
 console.log(player);
@@ -25,6 +17,15 @@ console.log(gameContainer?.children);
 
 body?.addEventListener('keydown', (e) => { player.playerMove(e, plyrShip) });
 body?.addEventListener('keyup', (e) => { player.playerShot(e, plyrShip) })
+
+if (gameContainer != null) {
+let ennemyContainer = new EnnemyContainer(gameContainer);
+let collision = new Collision(ennemyContainer.getContainerInformation(), player.getBaseLineHitBox());
+}
+
+
+
+
 
 
 

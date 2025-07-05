@@ -12,6 +12,7 @@ export class Player {
         this.playerPositionY = 0;
         this.gameBoardSizeLeft = 0;
         this.baselineHitBox = document.createElement('div');
+        this.baselineHitBox.id = "hitbox";
         this.baselineHitBox.style.height = `${this.height}`;
         this.baselineHitBox.style.width = `750px`;
         this.baselineHitBox.style.position = 'absolute';
