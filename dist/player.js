@@ -19,6 +19,7 @@ export class Player {
         this.baselineHitBox.style.display = "flex";
         this.baselineHitBox.style.borderTop = "2px";
         this.baselineHitBox.style.borderTopColor = "pink";
+        this.arrayBeam = [];
     }
     /** Créer l'apparence du personnage en recevant la zone de jeu et en en y ajoutant un
      * élément visuel
@@ -84,6 +85,8 @@ export class Player {
         if (action.key == " ") {
             console.log("Feu !");
             let lazer = new Lazer(player, this.playerPositionY);
+            this.addToArrayBeam(lazer.beam);
+            console.log(this.getArrayBeam());
         }
     }
     /** Vérifie si le personnage touche les bords, retourne true en cas de collision */
@@ -100,8 +103,21 @@ export class Player {
             return false;
         }
     }
+    //Gère les tableau de lasers tirés par le joueur 
+    addToArrayBeam(element) {
+        this.arrayBeam.push(element);
+    }
+    removeFirstElement(element) {
+        this.arrayBeam.shift();
+    }
+    getArrayBeam() {
+        return this.arrayBeam;
+    }
+    //Supprime les laser qui ne sont plus à l'écran en récupérant 
+    clearArrayBeam() {
+    }
 }
-class Lazer {
+export class Lazer {
     constructor(player, playerPos) {
         this.width = '5px';
         this.height = '25px';
@@ -117,10 +133,12 @@ class Lazer {
         this.beam.style.left = `${this.playerPosition}px`;
         this.beam.style.top = `${this.beamPositionY}px`;
         this.beamSpeed = 100;
+        this.stillOnScreen = true;
         this.gameBoard = document.getElementById('gameTarget');
         if (this.gameBoard != null) {
             this.gameBoard.appendChild(this.beam);
             this.beam.id = "laser";
+            this.beam.className = "laser";
             console.log(`Position sur x : ${this.beamPositionY}`);
             console.log(this.beam);
             this.intervalID = window.setInterval(() => { this.movingLazer(this.beamPositionY); }, this.beamSpeed);
@@ -134,7 +152,8 @@ class Lazer {
         this.beam.style.top = `${this.beamPositionY}px`;
         if (this.beamPositionY <= 0) {
             if (this.beam.parentNode) { //Vérifie si l'élément à un parent
-                this.beam.parentNode.removeChild(this.beam); //Si oui, récupère le parent et supprime l'enfant
+                //this.beam.parentNode.removeChild(this.beam); //Si oui, récupère le parent et supprime l'enfant
+                this.stillOnScreen = false; //Indique que la valeure n'est plus à l'écran
             }
             if (this.intervalID !== undefined) {
                 clearInterval(this.intervalID); //Arrête l'interval

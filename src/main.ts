@@ -2,6 +2,9 @@ import { Player } from './player.js'
 import { EnnemyContainer } from './ennemy.js';
 import { Collision } from './collision.js';
 
+import { GameLoop } from './gameloop.js';
+
+/**
 const body = document.querySelector('body');
 const gameContainer = document.getElementById('gameTarget');
 const plyrShip = document.createElement('div');
@@ -21,7 +24,10 @@ body?.addEventListener('keyup', (e) => { player.playerShot(e, plyrShip) })
 if (gameContainer != null) {
 let ennemyContainer = new EnnemyContainer(gameContainer);
 let collision = new Collision(ennemyContainer.getContainerInformation(), player.getBaseLineHitBox(), ennemyContainer, player);
-}
+console.log(ennemyContainer.ennemy.getArrayEnnemy());} 
+**/
+
+let gameloop = new GameLoop();
 
 
 

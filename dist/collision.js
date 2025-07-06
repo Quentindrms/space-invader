@@ -20,8 +20,8 @@ export class Collision {
         this.target_A_current_Y_position = targetA.getBoundingClientRect().top;
         this.target_B_current_X_position = targetB.getBoundingClientRect().left;
         this.target_B_current_Y_position = targetB.getBoundingClientRect().top;
-        console.log(`Position actuelle de l'élément A sur l'axe Y : ${this.target_A_current_Y_position}`);
-        console.log(`Position actuelle de l'élément B sur l'axe Y : ${this.target_B_current_Y_position}`);
+        //        console.log(`Position actuelle de l'élément A sur l'axe Y : ${this.target_A_current_Y_position}`);
+        //        console.log(`Position actuelle de l'élément B sur l'axe Y : ${this.target_B_current_Y_position}`);
     }
     //Permet de calculer si deux éléments 
     collideWithBaseLineHitBox() {
@@ -44,13 +44,10 @@ export class Collision {
             return false;
         }
     }
-    colideWithElement() {
-        if (this.target_B_current_Y_position >= this.target_B_current_Y_position && this.target_B_current_X_position >= this.target_B_current_Y_position) {
-            console.log("Collision entre les éléments testés");
-            return true;
-        }
-        else {
-            return false;
-        }
+}
+class ArrayOfElelements {
+    constructor() {
+        this.arrayOfEnnemys = [];
+        this.arrayOfLazers = [];
     }
 }

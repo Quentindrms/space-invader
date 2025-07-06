@@ -15,6 +15,7 @@ export class Player {
 
     baselineHitBox: HTMLElement;
 
+    arrayBeam: HTMLElement[];
 
     constructor(witdh: string, heigth: string, color: string) {
         this.witdh = (witdh + 'px');
@@ -39,6 +40,8 @@ export class Player {
         this.baselineHitBox.style.display = "flex";
         this.baselineHitBox.style.borderTop = "2px";
         this.baselineHitBox.style.borderTopColor = "pink";
+
+        this.arrayBeam = [];
     }
 
     /** Créer l'apparence du personnage en recevant la zone de jeu et en en y ajoutant un
@@ -67,14 +70,14 @@ export class Player {
 
     }
 
-    createBaseLineHitBox(target: HTMLElement|null, element: HTMLElement) {
+    createBaseLineHitBox(target: HTMLElement | null, element: HTMLElement) {
         if (element != null && target != null) {
             target.appendChild(element);
         }
     }
 
     //RFetourne les informations concernant la hitbox
-    getBaseLineHitBox():HTMLElement{
+    getBaseLineHitBox(): HTMLElement {
         return this.baselineHitBox;
     }
 
@@ -115,6 +118,8 @@ export class Player {
         if (action.key == " ") {
             console.log("Feu !");
             let lazer = new Lazer(player, this.playerPositionY);
+            this.addToArrayBeam(lazer.beam);
+            console.log(this.getArrayBeam());
         }
     }
 
@@ -133,9 +138,28 @@ export class Player {
             return false;
         }
     }
+
+    //Gère les tableau de lasers tirés par le joueur 
+
+    private addToArrayBeam(element: HTMLElement): void {
+        this.arrayBeam.push(element);
+    }
+
+    private removeFirstElement(element: HTMLElement[]): void {
+        this.arrayBeam.shift();
+    }
+
+    public getArrayBeam(): HTMLElement[] {
+        return this.arrayBeam;
+    }
+
+//Supprime les laser qui ne sont plus à l'écran en récupérant 
+    private clearArrayBeam(){
+
+    }
 }
 
-class Lazer {
+export class Lazer {
 
     width: string;
     height: string;
@@ -147,7 +171,9 @@ class Lazer {
     beamSpeed: number; //En miliseconde
     beamPositionY: number;
 
+
     intervalID: number | undefined;
+    stillOnScreen: boolean;
 
     constructor(player: HTMLElement, playerPos: number) {
         this.width = '5px';
@@ -166,17 +192,19 @@ class Lazer {
         this.beam.style.top = `${this.beamPositionY}px`;
 
         this.beamSpeed = 100;
+        this.stillOnScreen = true;
 
         this.gameBoard = document.getElementById('gameTarget');
         if (this.gameBoard != null) {
             this.gameBoard.appendChild(this.beam);
             this.beam.id = "laser";
+            this.beam.className = "laser";
             console.log(`Position sur x : ${this.beamPositionY}`)
             console.log(this.beam);
             this.intervalID = window.setInterval(() => { this.movingLazer(this.beamPositionY) }, this.beamSpeed)
         }
     }
-    
+
     /** Déplace le laser vers le haut jusqu'à ce qu'il atteigne le bord supérieur 
      * Lorsque le laser atteitn x=0px le laser est automatiuqement supprimé
     */
@@ -185,7 +213,8 @@ class Lazer {
         this.beam.style.top = `${this.beamPositionY}px`
         if (this.beamPositionY <= 0) {
             if (this.beam.parentNode) { //Vérifie si l'élément à un parent
-                this.beam.parentNode.removeChild(this.beam); //Si oui, récupère le parent et supprime l'enfant
+                //this.beam.parentNode.removeChild(this.beam); //Si oui, récupère le parent et supprime l'enfant
+                this.stillOnScreen = false; //Indique que la valeure n'est plus à l'écran
             }
             if (this.intervalID !== undefined) {
                 clearInterval(this.intervalID) //Arrête l'interval
