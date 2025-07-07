@@ -13,8 +13,8 @@ export class GameLoop {
     player: Player;
     collision!: Collision;
     ennemyContainer!: EnnemyContainer; //Non-null assertion garantit l'initialisation de la propriété avant son utilisation
-    body!:HTMLElement|null;
-    gameContainer:HTMLElement|null;
+    body!: HTMLElement | null;
+    gameContainer: HTMLElement | null;
     plyrShip!: HTMLElement;
     ennemy!: HTMLElement;
 
@@ -31,12 +31,12 @@ export class GameLoop {
 
         /** Créer l'objet joueur et le fait apparaitre à l'écran, lui ajoute une hitbox */
         this.player = new Player('50', '50', 'white')
-        if(this.gameContainer){
-        this.player.createPlayer(this.plyrShip, this.gameContainer);
-        this.player.createBaseLineHitBox(this.gameContainer, this.player.baselineHitBox);
-        this.ennemyContainer = new EnnemyContainer(this.gameContainer);
-        this.collision = new Collision(this.ennemyContainer.getContainerInformation(), this.player.getBaseLineHitBox(), this.ennemyContainer, this.player)
-        } else{
+        if (this.gameContainer) {
+            this.player.createPlayer(this.plyrShip, this.gameContainer);
+            this.player.createBaseLineHitBox(this.gameContainer, this.player.baselineHitBox);
+            this.ennemyContainer = new EnnemyContainer(this.gameContainer);
+            this.collision = new Collision(this.ennemyContainer.getContainerInformation(), this.player.getBaseLineHitBox(), this.ennemyContainer, this.player)
+        } else {
             console.log('Erreur');
         }
 
@@ -55,9 +55,8 @@ export class GameLoop {
     loop() {
         const now = Date.now();
         this.dt = now - this.time;
-        this.dtSeconds = this.dt/1000;
-        console.log(`Delta en miliseconde: ${this.dt}`)
-        console.log(`Delta en seconde : ${this.dtSeconds}`)
+        this.dtSeconds = this.dt / 1000;
+
 
         this.update(this.dt);
         this.updateDOM();

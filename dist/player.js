@@ -9,7 +9,9 @@ export class Player {
         this.speed = 5;
         this.life = 5;
         this.isAlive = true;
+        this.playerPositionX = 0;
         this.playerPositionY = 0;
+        this.newPlayerPositionX = 0;
         this.gameBoardSizeLeft = 0;
         this.baselineHitBox = document.createElement('div');
         this.baselineHitBox.id = "hitbox";
@@ -33,7 +35,7 @@ export class Player {
             element.style.position = this.position;
             element.style.justifyContent = this.align;
             target.appendChild(element);
-            this.playerPositionY = element.getBoundingClientRect().left;
+            this.playerPositionX = element.getBoundingClientRect().left;
             this.gameBoardSizeLeft = target.getBoundingClientRect().width;
             console.log(`Game board size : ${this.gameBoardSizeLeft}`);
         }
@@ -77,14 +79,14 @@ export class Player {
                 }
             }
         }
-        else {
-            console.log(mvt);
-        }
+    }
+    updatePlayerPosition() {
+        this.playerPositionX = this.newPlayerPositionX;
     }
     playerShot(action, player) {
         if (action.key == " ") {
             console.log("Feu !");
-            let lazer = new Lazer(player, this.playerPositionY);
+            let lazer = new Lazer(player, this.playerPositionX);
             this.addToArrayBeam(lazer.beam);
             console.log(this.getArrayBeam());
         }

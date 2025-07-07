@@ -11,6 +11,8 @@ export class Player {
     isAlive: boolean;
 
     playerPositionY: number;
+    playerPositionX: number;
+    newPlayerPositionX: number;
     gameBoardSizeLeft: number;
 
     baselineHitBox: HTMLElement;
@@ -29,7 +31,9 @@ export class Player {
         this.life = 5;
         this.isAlive = true;
 
+        this.playerPositionX = 0;
         this.playerPositionY = 0;
+        this.newPlayerPositionX = 0;
         this.gameBoardSizeLeft = 0;
 
         this.baselineHitBox = document.createElement('div');
@@ -58,7 +62,7 @@ export class Player {
             element.style.justifyContent = this.align;
             target.appendChild(element);
 
-            this.playerPositionY = element.getBoundingClientRect().left;
+            this.playerPositionX = element.getBoundingClientRect().left;
             this.gameBoardSizeLeft = target.getBoundingClientRect().width;
 
             console.log(`Game board size : ${this.gameBoardSizeLeft}`)
@@ -85,6 +89,7 @@ export class Player {
      * si le personnage n'entre pas en collision avec une bordure 
      * si le personne entre en contacte avec une bordure il ne bouge pas
      */
+
     playerMove(mvt: KeyboardEvent, player: HTMLElement): void {
         console.log(`Y = ${this.playerPositionY}`)
         if (mvt.key == 'ArrowRight') {
@@ -108,16 +113,17 @@ export class Player {
                 }
             }
         }
+    }
 
-        else {
-            console.log(mvt);
-        }
+
+    updatePlayerPosition(){
+        this.playerPositionX = this.newPlayerPositionX;
     }
 
     playerShot(action: KeyboardEvent, player: HTMLElement) {
         if (action.key == " ") {
             console.log("Feu !");
-            let lazer = new Lazer(player, this.playerPositionY);
+            let lazer = new Lazer(player, this.playerPositionX);
             this.addToArrayBeam(lazer.beam);
             console.log(this.getArrayBeam());
         }

@@ -34,8 +34,6 @@ export class GameLoop {
         const now = Date.now();
         this.dt = now - this.time;
         this.dtSeconds = this.dt / 1000;
-        console.log(`Delta en miliseconde: ${this.dt}`);
-        console.log(`Delta en seconde : ${this.dtSeconds}`);
         this.update(this.dt);
         this.updateDOM();
         this.time = now;

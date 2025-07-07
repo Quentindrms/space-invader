@@ -142,6 +142,7 @@ export class EnnemyContainer{
     /** Déplace le conteneur sur l'axe principale et l'axe secondaire suivant un patern prédéfinit
      * 
      */
+    
     public containerMove(deltaTime: number, speed: number) {
         let positionX: number = parseInt(this.ennemyContainerElement.style.left || "0", 10);
         let positionY: number = parseInt(this.ennemyContainerElement.style.top || "0", 10);
@@ -159,7 +160,6 @@ export class EnnemyContainer{
         // Déplacement selon la direction
         positionX += Math.round(((speed * deltaTime) * this.direction));
         positionX = Math.round(positionX)
-        console.log(`Position X : ${positionX}`);
 
         // Inversion de direction aux bords
         if (positionX >= maxX) {

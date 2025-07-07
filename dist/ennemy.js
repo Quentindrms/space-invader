@@ -108,7 +108,6 @@ export class EnnemyContainer {
         // Déplacement selon la direction
         positionX += Math.round(((speed * deltaTime) * this.direction));
         positionX = Math.round(positionX);
-        console.log(`Position X : ${positionX}`);
         // Inversion de direction aux bords
         if (positionX >= maxX) {
             this.direction = -1;
