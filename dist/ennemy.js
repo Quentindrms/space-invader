@@ -114,7 +114,7 @@ export class EnnemyContainer {
             positionX = maxX;
             this.bounceOnBorder += 1;
             console.log(`bounce : ${this.bounceOnBorder}`);
-            if (this.bounceOnBorder == 1) {
+            if (this.bounceOnBorder == 3) {
                 positionY += (speed * deltaTime);
                 this.bounceOnBorder = 0;
             }
@@ -124,7 +124,7 @@ export class EnnemyContainer {
             positionX = minX;
             this.bounceOnBorder += 1;
             console.log(`bounce : ${this.bounceOnBorder}`);
-            if (this.bounceOnBorder == 1) {
+            if (this.bounceOnBorder == 3) {
                 positionY += (speed * deltaTime);
                 this.bounceOnBorder = 0;
             }

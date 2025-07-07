@@ -37,7 +37,6 @@ export class Collision {
         this.intervalID = 0;
 
         this.collideWithBaseLineHitBox();
-
     }
 
     /** Récupère les éléments A et B à un moment T puis enregistre leur position sur l'axe X et Y */
@@ -63,7 +62,7 @@ public collideWithBaseLineHitBox(): boolean {
                     this.setPosition(this.target_A_element, this.target_B_element);
                     if (this.collideWithBaseLineHitBox() == true) {
                         clearInterval(this.intervalID);
-                        //this.target_A_obj.stopMovement(true);
+                        this.target_A_obj.stopMovement(true);
                     }
                 }
             }, this.refresh_rate);

@@ -7,6 +7,8 @@ export class Player {
   position: string;
   speed: number;
 
+  player: HTMLElement;
+
   life: number;
   isAlive: boolean;
 
@@ -26,12 +28,14 @@ export class Player {
     this.display = "flex";
     this.align = "";
     this.position = "absolute";
-    this.speed = 5;
+    this.speed = 15;
 
     this.life = 5;
     this.isAlive = true;
 
-    this.playerPositionX = 0;
+    this.player = document.createElement('div');
+    this.playerPositionX = parseInt(witdh) / 2;
+    console.log(`player position y : ${this.playerPositionX}`)
     this.playerPositionY = 0;
     this.newPlayerPositionX = 0;
     this.gameBoardSizeLeft = 0;
@@ -48,22 +52,22 @@ export class Player {
     this.arrayBeam = [];
   }
 
-  createPlayer(element: HTMLElement | null, target: HTMLElement | null): void {
-    if (element != null && target != null) {
-      element.style.width = this.witdh;
-      element.style.height = this.height;
-      element.style.backgroundColor = this.color;
-      element.style.display = this.display;
-      element.style.position = this.position;
-      element.style.justifyContent = this.align;
-      target.appendChild(element);
+  createPlayer(target: HTMLElement | null): void {
+    if (this.player != null && target != null) {
+      this.player.style.width = this.witdh;
+      this.player.style.height = this.height;
+      this.player.style.backgroundColor = this.color;
+      this.player.style.display = this.display;
+      this.player.style.position = this.position;
+      this.player.style.justifyContent = this.align;
+      target.appendChild(this.player);
 
-      this.playerPositionX = element.getBoundingClientRect().left;
+      this.playerPositionX = this.player.getBoundingClientRect().left;
       this.gameBoardSizeLeft = target.getBoundingClientRect().width;
 
       console.log(`Game board size : ${this.gameBoardSizeLeft}`);
     } else {
-      console.log(`Erreur l’élément ${element} et ${target} n'existent pas`);
+      console.log(`Erreur l’élément ${this.player} et ${target} n'existent pas`);
     }
   }
 
@@ -77,28 +81,28 @@ export class Player {
     return this.baselineHitBox;
   }
 
-  playerMove(mvt: KeyboardEvent, player: HTMLElement): void {
+  playerMove(mvt: KeyboardEvent): void {
     if (mvt.key == "ArrowRight") {
       if (!this.borderCollide(this.playerPositionY, this.speed, "right")) {
         this.playerPositionY += this.speed;
-        player.style.left = `${this.playerPositionY}px`;
+        this.player.style.left = `${this.playerPositionY}px`;
       }
     } else if (mvt.key == "ArrowLeft") {
       if (!this.borderCollide(this.playerPositionY, this.speed, "left")) {
         this.playerPositionY -= this.speed;
-        player.style.left = `${this.playerPositionX}px`;
+        this.player.style.left = `${this.playerPositionY}px`;
       }
     }
   }
 
-  updatePlayerPosition():string {
+  updatePlayerPosition(): string {
     this.playerPositionX = this.newPlayerPositionX;
     return `${this.playerPositionX}px`
   }
 
-  playerShot(action: KeyboardEvent, player: HTMLElement) {
+  playerShot(action: KeyboardEvent) {
     if (action.key === " ") {
-      const lazer = new Lazer(player, this.playerPositionY);
+      const lazer = new Lazer(this.player, this.playerPositionY);
       this.addToArrayBeam(lazer.beam);
     }
   }

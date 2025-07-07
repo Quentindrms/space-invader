@@ -6,10 +6,12 @@ export class Player {
         this.display = "flex";
         this.align = "";
         this.position = "absolute";
-        this.speed = 5;
+        this.speed = 15;
         this.life = 5;
         this.isAlive = true;
-        this.playerPositionX = 0;
+        this.player = document.createElement('div');
+        this.playerPositionX = parseInt(witdh) / 2;
+        console.log(`player position y : ${this.playerPositionX}`);
         this.playerPositionY = 0;
         this.newPlayerPositionX = 0;
         this.gameBoardSizeLeft = 0;
@@ -23,21 +25,21 @@ export class Player {
         this.baselineHitBox.style.borderTopColor = "pink";
         this.arrayBeam = [];
     }
-    createPlayer(element, target) {
-        if (element != null && target != null) {
-            element.style.width = this.witdh;
-            element.style.height = this.height;
-            element.style.backgroundColor = this.color;
-            element.style.display = this.display;
-            element.style.position = this.position;
-            element.style.justifyContent = this.align;
-            target.appendChild(element);
-            this.playerPositionX = element.getBoundingClientRect().left;
+    createPlayer(target) {
+        if (this.player != null && target != null) {
+            this.player.style.width = this.witdh;
+            this.player.style.height = this.height;
+            this.player.style.backgroundColor = this.color;
+            this.player.style.display = this.display;
+            this.player.style.position = this.position;
+            this.player.style.justifyContent = this.align;
+            target.appendChild(this.player);
+            this.playerPositionX = this.player.getBoundingClientRect().left;
             this.gameBoardSizeLeft = target.getBoundingClientRect().width;
             console.log(`Game board size : ${this.gameBoardSizeLeft}`);
         }
         else {
-            console.log(`Erreur l’élément ${element} et ${target} n'existent pas`);
+            console.log(`Erreur l’élément ${this.player} et ${target} n'existent pas`);
         }
     }
     createBaseLineHitBox(target, element) {
@@ -48,17 +50,17 @@ export class Player {
     getBaseLineHitBox() {
         return this.baselineHitBox;
     }
-    playerMove(mvt, player) {
+    playerMove(mvt) {
         if (mvt.key == "ArrowRight") {
             if (!this.borderCollide(this.playerPositionY, this.speed, "right")) {
                 this.playerPositionY += this.speed;
-                player.style.left = `${this.playerPositionY}px`;
+                this.player.style.left = `${this.playerPositionY}px`;
             }
         }
         else if (mvt.key == "ArrowLeft") {
             if (!this.borderCollide(this.playerPositionY, this.speed, "left")) {
                 this.playerPositionY -= this.speed;
-                player.style.left = `${this.playerPositionX}px`;
+                this.player.style.left = `${this.playerPositionY}px`;
             }
         }
     }
@@ -66,9 +68,9 @@ export class Player {
         this.playerPositionX = this.newPlayerPositionX;
         return `${this.playerPositionX}px`;
     }
-    playerShot(action, player) {
+    playerShot(action) {
         if (action.key === " ") {
-            const lazer = new Lazer(player, this.playerPositionY);
+            const lazer = new Lazer(this.player, this.playerPositionY);
             this.addToArrayBeam(lazer.beam);
         }
     }
