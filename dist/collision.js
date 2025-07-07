@@ -44,6 +44,17 @@ export class Collision {
             return false;
         }
     }
+    collideWithPlayer(playerHitbox, ennemyContainer) {
+        if (playerHitbox && ennemyContainer) {
+            this.setPosition(playerHitbox, ennemyContainer);
+            if (this.target_B_current_Y_position <= this.target_A_current_Y_position) {
+                console.log('Collision entre les deux éléments');
+            }
+            else {
+                console.log('Pas de collision');
+            }
+        }
+    }
 }
 class ArrayOfElelements {
     constructor() {

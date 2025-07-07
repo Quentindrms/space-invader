@@ -1,230 +1,188 @@
 export class Player {
-    witdh: string;
-    height: string;
-    color: string;
-    display: string;
-    align: string;
-    position: string;
-    speed: number;
+  witdh: string;
+  height: string;
+  color: string;
+  display: string;
+  align: string;
+  position: string;
+  speed: number;
 
-    life: number;
-    isAlive: boolean;
+  life: number;
+  isAlive: boolean;
 
-    playerPositionY: number;
-    playerPositionX: number;
-    newPlayerPositionX: number;
-    gameBoardSizeLeft: number;
+  playerPositionY: number;
+  playerPositionX: number;
+  newPlayerPositionX: number;
+  gameBoardSizeLeft: number;
 
-    baselineHitBox: HTMLElement;
+  baselineHitBox: HTMLElement;
 
-    arrayBeam: HTMLElement[];
+  arrayBeam: HTMLElement[];
 
-    constructor(witdh: string, heigth: string, color: string) {
-        this.witdh = (witdh + 'px');
-        this.height = (heigth + 'px');
-        this.color = color;
-        this.display = "flex";
-        this.align = '';
-        this.position = 'absolute';
-        this.speed = 5;
+  constructor(witdh: string, heigth: string, color: string) {
+    this.witdh = witdh + "px";
+    this.height = heigth + "px";
+    this.color = color;
+    this.display = "flex";
+    this.align = "";
+    this.position = "absolute";
+    this.speed = 5;
 
-        this.life = 5;
-        this.isAlive = true;
+    this.life = 5;
+    this.isAlive = true;
 
-        this.playerPositionX = 0;
-        this.playerPositionY = 0;
-        this.newPlayerPositionX = 0;
-        this.gameBoardSizeLeft = 0;
+    this.playerPositionX = 0;
+    this.playerPositionY = 0;
+    this.newPlayerPositionX = 0;
+    this.gameBoardSizeLeft = 0;
 
-        this.baselineHitBox = document.createElement('div');
-        this.baselineHitBox.id = "hitbox";
-        this.baselineHitBox.style.height = `${this.height}`;
-        this.baselineHitBox.style.width = `750px`;
-        this.baselineHitBox.style.position = 'absolute'
-        this.baselineHitBox.style.display = "flex";
-        this.baselineHitBox.style.borderTop = "2px";
-        this.baselineHitBox.style.borderTopColor = "pink";
+    this.baselineHitBox = document.createElement("div");
+    this.baselineHitBox.id = "hitbox";
+    this.baselineHitBox.style.height = `${this.height}`;
+    this.baselineHitBox.style.width = `750px`;
+    this.baselineHitBox.style.position = "absolute";
+    this.baselineHitBox.style.display = "flex";
+    this.baselineHitBox.style.borderTop = "2px";
+    this.baselineHitBox.style.borderTopColor = "pink";
 
-        this.arrayBeam = [];
+    this.arrayBeam = [];
+  }
+
+  createPlayer(element: HTMLElement | null, target: HTMLElement | null): void {
+    if (element != null && target != null) {
+      element.style.width = this.witdh;
+      element.style.height = this.height;
+      element.style.backgroundColor = this.color;
+      element.style.display = this.display;
+      element.style.position = this.position;
+      element.style.justifyContent = this.align;
+      target.appendChild(element);
+
+      this.playerPositionX = element.getBoundingClientRect().left;
+      this.gameBoardSizeLeft = target.getBoundingClientRect().width;
+
+      console.log(`Game board size : ${this.gameBoardSizeLeft}`);
+    } else {
+      console.log(`Erreur l’élément ${element} et ${target} n'existent pas`);
     }
+  }
 
-    /** Créer l'apparence du personnage en recevant la zone de jeu et en en y ajoutant un
-     * élément visuel
-     */
-
-    createPlayer(element: HTMLElement | null, target: HTMLElement | null): void {
-        if (element != null && target != null) {
-            element.style.width = this.witdh;
-            element.style.height = this.height;
-            element.style.backgroundColor = this.color;
-            element.style.display = this.display;
-            element.style.position = this.position;
-            element.style.justifyContent = this.align;
-            target.appendChild(element);
-
-            this.playerPositionX = element.getBoundingClientRect().left;
-            this.gameBoardSizeLeft = target.getBoundingClientRect().width;
-
-            console.log(`Game board size : ${this.gameBoardSizeLeft}`)
-        }
-        else {
-            console.log(`Erreur l élément ${element} et ${target} n'existent pas`)
-            return;
-        }
-
+  createBaseLineHitBox(target: HTMLElement | null, element: HTMLElement) {
+    if (element != null && target != null) {
+      target.appendChild(element);
     }
+  }
 
-    createBaseLineHitBox(target: HTMLElement | null, element: HTMLElement) {
-        if (element != null && target != null) {
-            target.appendChild(element);
-        }
+  getBaseLineHitBox(): HTMLElement {
+    return this.baselineHitBox;
+  }
+
+  playerMove(mvt: KeyboardEvent, player: HTMLElement): void {
+    if (mvt.key == "ArrowRight") {
+      if (!this.borderCollide(this.playerPositionY, this.speed, "right")) {
+        this.playerPositionY += this.speed;
+        player.style.left = `${this.playerPositionY}px`;
+      }
+    } else if (mvt.key == "ArrowLeft") {
+      if (!this.borderCollide(this.playerPositionY, this.speed, "left")) {
+        this.playerPositionY -= this.speed;
+        player.style.left = `${this.playerPositionX}px`;
+      }
     }
+  }
 
-    //RFetourne les informations concernant la hitbox
-    getBaseLineHitBox(): HTMLElement {
-        return this.baselineHitBox;
+  updatePlayerPosition():string {
+    this.playerPositionX = this.newPlayerPositionX;
+    return `${this.playerPositionX}px`
+  }
+
+  playerShot(action: KeyboardEvent, player: HTMLElement) {
+    if (action.key === " ") {
+      const lazer = new Lazer(player, this.playerPositionY);
+      this.addToArrayBeam(lazer.beam);
     }
+  }
 
-    /** Reçoit les touches utilisées par l'utilisateur et modifie sa position
-     * si le personnage n'entre pas en collision avec une bordure 
-     * si le personne entre en contacte avec une bordure il ne bouge pas
-     */
-
-    playerMove(mvt: KeyboardEvent, player: HTMLElement): void {
-        console.log(`Y = ${this.playerPositionY}`)
-        if (mvt.key == 'ArrowRight') {
-            console.log('Droite');
-            if (this.borderCollide(this.playerPositionY, this.speed, 'right') == false) {
-                this.playerPositionY += this.speed;
-                player.style.left = `${this.playerPositionY}px`
-                console.log(`Nouvelle position Y : ${this.playerPositionY}`);
-            }
-            else {
-
-            }
-        }
-        else if (mvt.key == 'ArrowLeft') {
-            if (mvt.key == 'ArrowLeft') {
-                console.log('Droite');
-                if (this.borderCollide(this.playerPositionY, this.speed, 'left') == false) {
-                    this.playerPositionY -= this.speed;
-                    player.style.left = `${this.playerPositionY}px`
-                    console.log(`Nouvelle position Y : ${this.playerPositionY}`);
-                }
-            }
-        }
+  borderCollide(yPos: number, speed: number, direction: string): boolean {
+    if (yPos - speed <= 0 && direction === "left") {
+      return true;
+    } else if (
+      yPos + speed >= this.gameBoardSizeLeft &&
+      direction === "right"
+    ) {
+      return true;
+    } else {
+      return false;
     }
+  }
 
+  private addToArrayBeam(element: HTMLElement): void {
+    this.arrayBeam.push(element);
+  }
 
-    updatePlayerPosition(){
-        this.playerPositionX = this.newPlayerPositionX;
+  private removeFromArrayBeam(element: HTMLElement): void {
+    const index = this.arrayBeam.indexOf(element);
+    if (index !== -1) {
+      this.arrayBeam.splice(index, 1);
     }
+  }
 
-    playerShot(action: KeyboardEvent, player: HTMLElement) {
-        if (action.key == " ") {
-            console.log("Feu !");
-            let lazer = new Lazer(player, this.playerPositionX);
-            this.addToArrayBeam(lazer.beam);
-            console.log(this.getArrayBeam());
-        }
+  public getArrayBeam(): HTMLElement[] {
+    return this.arrayBeam;
+  }
+
+  updateLasers(dt: number): void {
+    const speed = 500; // px/s
+    const delta = speed * (dt / 1000);
+
+    for (let i = this.arrayBeam.length - 1; i >= 0; i--) {
+      const beam = this.arrayBeam[i];
+      const y = parseFloat(beam.style.top);
+      const newY = y - delta;
+
+      beam.style.top = `${newY}px`;
+
+      if (newY <= 0) {
+        beam.remove();
+        this.removeFromArrayBeam(beam);
+      }
     }
-
-    /** Vérifie si le personnage touche les bords, retourne true en cas de collision */
-
-    borderCollide(yPos: number, speed: number, direction: string): boolean {
-        if ((yPos - speed) <= 0 && direction == 'left') {
-            console.log('Colision à gauche')
-            return true;
-        }
-        else if ((yPos + speed) >= this.gameBoardSizeLeft && direction == 'right') {
-            console.log('Colision à droite');
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    //Gère les tableau de lasers tirés par le joueur 
-
-    private addToArrayBeam(element: HTMLElement): void {
-        this.arrayBeam.push(element);
-    }
-
-    private removeFirstElement(element: HTMLElement[]): void {
-        this.arrayBeam.shift();
-    }
-
-    public getArrayBeam(): HTMLElement[] {
-        return this.arrayBeam;
-    }
-
-//Supprime les laser qui ne sont plus à l'écran en récupérant 
-    private clearArrayBeam(){
-
-    }
+  }
 }
 
 export class Lazer {
+  width: string;
+  height: string;
+  backgroundColor: string;
+  position: string;
+  playerPosition: number;
+  gameBoard: HTMLElement | null;
+  beam: HTMLElement;
+  beamPositionY: number;
+  stillOnScreen: boolean;
 
-    width: string;
-    height: string;
-    backgroundColor: string;
-    position: string;
-    playerPosition: number;
-    gameBoard: HTMLElement | null;
-    beam: HTMLElement;
-    beamSpeed: number; //En miliseconde
-    beamPositionY: number;
+  constructor(player: HTMLElement, playerPos: number) {
+    this.width = "5px";
+    this.height = "25px";
+    this.backgroundColor = "pink";
+    this.position = "absolute";
+    this.playerPosition = playerPos;
+    this.beamPositionY = player.getBoundingClientRect().y;
+    this.stillOnScreen = true;
 
+    this.beam = document.createElement("div");
+    this.beam.style.width = this.width;
+    this.beam.style.height = this.height;
+    this.beam.style.backgroundColor = this.backgroundColor;
+    this.beam.style.position = this.position;
+    this.beam.style.left = `${this.playerPosition}px`;
+    this.beam.style.top = `${this.beamPositionY}px`;
 
-    intervalID: number | undefined;
-    stillOnScreen: boolean;
-
-    constructor(player: HTMLElement, playerPos: number) {
-        this.width = '5px';
-        this.height = '25px'
-        this.backgroundColor = 'pink';
-        this.position = 'absolute';
-        this.playerPosition = playerPos;
-        this.beamPositionY = player.getBoundingClientRect().y - 25;
-
-        this.beam = document.createElement('div');
-        this.beam.style.width = this.width;
-        this.beam.style.height = this.height;
-        this.beam.style.backgroundColor = this.backgroundColor;
-        this.beam.style.position = this.position;
-        this.beam.style.left = `${this.playerPosition}px`;
-        this.beam.style.top = `${this.beamPositionY}px`;
-
-        this.beamSpeed = 100;
-        this.stillOnScreen = true;
-
-        this.gameBoard = document.getElementById('gameTarget');
-        if (this.gameBoard != null) {
-            this.gameBoard.appendChild(this.beam);
-            this.beam.id = "laser";
-            this.beam.className = "laser";
-            console.log(`Position sur x : ${this.beamPositionY}`)
-            console.log(this.beam);
-            this.intervalID = window.setInterval(() => { this.movingLazer(this.beamPositionY) }, this.beamSpeed)
-        }
+    this.gameBoard = document.getElementById("gameTarget");
+    if (this.gameBoard != null) {
+      this.beam.id = "laser";
+      this.beam.className = "laser";
+      this.gameBoard.appendChild(this.beam);
     }
-
-    /** Déplace le laser vers le haut jusqu'à ce qu'il atteigne le bord supérieur 
-     * Lorsque le laser atteitn x=0px le laser est automatiuqement supprimé
-    */
-    movingLazer(position: number) {
-        this.beamPositionY -= 10;
-        this.beam.style.top = `${this.beamPositionY}px`
-        if (this.beamPositionY <= 0) {
-            if (this.beam.parentNode) { //Vérifie si l'élément à un parent
-                //this.beam.parentNode.removeChild(this.beam); //Si oui, récupère le parent et supprime l'enfant
-                this.stillOnScreen = false; //Indique que la valeure n'est plus à l'écran
-            }
-            if (this.intervalID !== undefined) {
-                clearInterval(this.intervalID) //Arrête l'interval
-            }
-        }
-    }
+  }
 }

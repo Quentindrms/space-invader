@@ -55,7 +55,7 @@ export class Collision {
 
     //Permet de calculer si deux éléments 
 
-    public collideWithBaseLineHitBox(): boolean {
+public collideWithBaseLineHitBox(): boolean {
 
         if (this.target_A_element != null && this.target_B_element != null) {
             this.intervalID = window.setTimeout(() => {
@@ -74,6 +74,18 @@ export class Collision {
             return true
         } else {
             return false
+        }
+    }
+
+    public collideWithPlayer(playerHitbox:HTMLElement, ennemyContainer:HTMLElement){
+        if(playerHitbox && ennemyContainer){
+            this.setPosition(playerHitbox, ennemyContainer);
+            if(this.target_B_current_Y_position <= this.target_A_current_Y_position){
+                console.log('Collision entre les deux éléments')
+            }
+            else{
+                console.log('Pas de collision');
+            }
         }
     }
 }
