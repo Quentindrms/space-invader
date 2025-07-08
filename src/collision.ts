@@ -56,29 +56,19 @@ export class Collision {
 
     }
 
-    //Permet de calculer si deux éléments 
-/** Refaire la fonction pour qu'elle renvoie une valeure capable d'arrêter le mouvement  */
-public collideWithBaseLineHitBox(): boolean {
-
-        if (this.target_A_element != null && this.target_B_element != null) {
-            this.intervalID = window.setTimeout(() => {
-                if (this.target_A_element != null && this.target_B_element != null) {
-                    this.setPosition(this.target_A_element, this.target_B_element);
-                    if (this.collideWithBaseLineHitBox() == true) {
-                        clearInterval(this.intervalID);
-                        return true;
-                    }
-                }
-            }, this.refresh_rate);
-        }
-
-        if (this.target_A_current_Y_position >= this.target_B_current_Y_position) {
-            console.log(`Collision entre les éléments testés`)
-            return true
-        } else {
-            return false
+    //Permet de calculer si les ennemis rencontrent le joueur 
+public collideWithBaseLineHitBox():boolean{
+    if(this.target_A_element != null && this.target_B_element != null){
+        this.setPosition(this.target_A_element, this.target_B_element);
+        if(this.target_A_current_Y_position >= this.target_B_current_Y_position){
+            console.log(`Target A : ${this.target_A_current_Y_position}`)
+            console.log('COLLISION !!!!!!!!!!!!!!!!!!!!!');
+            return true;
         }
     }
+    return false;
+}
+
 
     public collideWithPlayer(playerHitbox:HTMLElement, ennemyContainer:HTMLElement){
         if(playerHitbox && ennemyContainer){

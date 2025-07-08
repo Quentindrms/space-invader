@@ -17,7 +17,9 @@ export class GameLoop {
             this.player.createPlayer(this.gameContainer);
             this.player.createBaseLineHitBox(this.gameContainer, this.player.baselineHitBox);
             this.ennemyContainer = new EnnemyContainer(this.gameContainer);
-            this.collision = new Collision(this.ennemyContainer.getContainerInformation(), this.player.getBaseLineHitBox(), this.ennemyContainer, this.player);
+            this.collisionWithBaseLine = new Collision(this.ennemyContainer.getContainerInformation(), //Target A
+            this.player.getBaseLineHitBox(), //Target B
+            this.ennemyContainer, this.player);
         }
         else {
             console.log("Erreur");
@@ -41,14 +43,13 @@ export class GameLoop {
     update(dt) {
         this.player.updateLasers(dt);
         this.player.updatePlayerPosition();
-        if (this.collision.collideWithBaseLineHitBox()) {
-            this.ennemyContainer.containerMove(0, 0); // Arrête la boucle en  cas de collision
-            console.log('Arrêt du mouvement');
+        if (this.collisionWithBaseLine.collideWithBaseLineHitBox() == true) {
+            this.ennemyContainer.canMoove = false;
         }
     }
     // Mise à jour des éléments du DOM
     updateDOM() {
-        this.ennemyContainer.containerMove(this.dt, 1);
-        console.log("Update DOM");
+        this.ennemyContainer.containerMove(this.dt, 0.12);
+        //console.log("Update DOM");
     }
 }

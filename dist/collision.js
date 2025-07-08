@@ -24,27 +24,17 @@ export class Collision {
         //        console.log(`Position actuelle de l'élément A sur l'axe Y : ${this.target_A_current_Y_position}`);
         //        console.log(`Position actuelle de l'élément B sur l'axe Y : ${this.target_B_current_Y_position}`);
     }
-    //Permet de calculer si deux éléments 
-    /** Refaire la fonction pour qu'elle renvoie une valeure capable d'arrêter le mouvement  */
+    //Permet de calculer si les ennemis rencontrent le joueur 
     collideWithBaseLineHitBox() {
         if (this.target_A_element != null && this.target_B_element != null) {
-            this.intervalID = window.setTimeout(() => {
-                if (this.target_A_element != null && this.target_B_element != null) {
-                    this.setPosition(this.target_A_element, this.target_B_element);
-                    if (this.collideWithBaseLineHitBox() == true) {
-                        clearInterval(this.intervalID);
-                        return true;
-                    }
-                }
-            }, this.refresh_rate);
+            this.setPosition(this.target_A_element, this.target_B_element);
+            if (this.target_A_current_Y_position >= this.target_B_current_Y_position) {
+                console.log(`Target A : ${this.target_A_current_Y_position}`);
+                console.log('COLLISION !!!!!!!!!!!!!!!!!!!!!');
+                return true;
+            }
         }
-        if (this.target_A_current_Y_position >= this.target_B_current_Y_position) {
-            console.log(`Collision entre les éléments testés`);
-            return true;
-        }
-        else {
-            return false;
-        }
+        return false;
     }
     collideWithPlayer(playerHitbox, ennemyContainer) {
         if (playerHitbox && ennemyContainer) {

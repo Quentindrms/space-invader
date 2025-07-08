@@ -73,9 +73,9 @@ export class EnnemyContainer {
         this.ennemyContainerSizeLeft = 0;
         this.direction = 1;
         this.speed = 20;
+        this.canMoove = true;
         this.ennemyContainerElement = document.createElement('div');
         this.createContainer();
-        // this.intervalID = window.setInterval(() => this.containerMove(this.ennemyContainerElement), 100);
     }
     /** Créer le conteneur */
     createContainer() {
@@ -106,24 +106,24 @@ export class EnnemyContainer {
         const maxX = gameTargetRect.width - containerRect.width;
         const minX = 10;
         // Déplacement selon la direction
-        positionX += Math.round(((speed * deltaTime) * this.direction));
-        positionX = Math.round(positionX);
+        if (this.canMoove == true) {
+            positionX += Math.round(((speed * deltaTime) * this.direction));
+            positionX = Math.round(positionX);
+        }
         // Inversion de direction aux bords
-        if (positionX >= maxX) {
+        if (positionX >= maxX && this.canMoove == true) {
             this.direction = -1;
             positionX = maxX;
             this.bounceOnBorder += 1;
-            console.log(`bounce : ${this.bounceOnBorder}`);
             if (this.bounceOnBorder == 3) {
                 positionY += (speed * deltaTime);
                 this.bounceOnBorder = 0;
             }
         }
-        if (positionX <= minX) {
+        if (positionX <= minX && this.canMoove == true) {
             this.direction = 1;
             positionX = minX;
             this.bounceOnBorder += 1;
-            console.log(`bounce : ${this.bounceOnBorder}`);
             if (this.bounceOnBorder == 3) {
                 positionY += (speed * deltaTime);
                 this.bounceOnBorder = 0;
@@ -131,7 +131,6 @@ export class EnnemyContainer {
         }
         this.ennemyContainerElement.style.left = `${positionX}px`;
         this.ennemyContainerElement.style.top = `${positionY}px`;
-        // setTimeout(() => this.containerMove(containerElement), 100);
     }
     getContainerInformation() {
         return this.ennemyContainerElement;
