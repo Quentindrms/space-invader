@@ -46,6 +46,7 @@ export class Ennemys {
     addToArrayEnnemy(element) {
         console.log(`${element} ajouté au tableau`);
         this.arrayEnnemy.push(element);
+        console.log(this.getArrayEnnemy());
     }
     getArrayEnnemy() {
         return this.arrayEnnemy;
@@ -135,6 +136,7 @@ export class EnnemyContainer {
     getContainerInformation() {
         return this.ennemyContainerElement;
     }
-    stopContainer() {
+    getArrayEnnemy() {
+        return this.ennemy.getArrayEnnemy();
     }
 }

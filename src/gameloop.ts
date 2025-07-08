@@ -1,6 +1,7 @@
 import { Player } from "./player.js";
 import { Lazer } from "./player.js";
-import { Collision } from "./collision.js";
+import { PlayerCollision } from "./collision.js";
+import { CollisionElements } from "./collision.js";
 import { EnnemyContainer, Ennemys } from "./ennemy.js";
 
 export class GameLoop {
@@ -9,7 +10,8 @@ export class GameLoop {
     dtSeconds: number;
 
     player: Player;
-    collisionWithBaseLine!: Collision;
+    collisionWithBaseLine!: PlayerCollision;
+    collisionElements!: CollisionElements;
     ennemyContainer!: EnnemyContainer; // Non-null assertion garantit l'initialisation de la propriété avant son utilisation
     body!: HTMLElement | null;
     gameContainer: HTMLElement | null;
@@ -36,12 +38,15 @@ export class GameLoop {
                 this.player.baselineHitBox
             );
             this.ennemyContainer = new EnnemyContainer(this.gameContainer);
-            this.collisionWithBaseLine = new Collision(
+            this.collisionWithBaseLine = new PlayerCollision(
                 this.ennemyContainer.getContainerInformation(), //Target A
                 this.player.getBaseLineHitBox(), //Target B
                 this.ennemyContainer,
                 this.player
             );
+
+            this.collisionElements = new CollisionElements(this.player.arrayBeam, this.ennemyContainer.getArrayEnnemy());
+
         } else {
             console.log("Erreur");
         }
@@ -74,9 +79,10 @@ export class GameLoop {
     update(dt: number) {
         this.player.updateLasers(dt);
         this.player.updatePlayerPosition();
-        if(this.collisionWithBaseLine.collideWithBaseLineHitBox() == true){
+        if (this.collisionWithBaseLine.collideWithBaseLineHitBox() == true) {
             this.ennemyContainer.canMoove = false;
-        } 
+        }
+        this.collisionElements.checkPosition();
     }
 
     // Mise à jour des éléments du DOM

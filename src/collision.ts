@@ -2,7 +2,7 @@ import { EnnemyContainer } from './ennemy.js'
 import { Ennemys } from './ennemy.js';
 import { Lazer, Player } from './player.js';
 
-export class Collision {
+export class PlayerCollision {
     target_A_current_X_position: number;
     target_A_current_Y_position: number;
     target_B_current_X_position: number;
@@ -51,44 +51,88 @@ export class Collision {
         this.target_B_current_X_position = targetB.getBoundingClientRect().left;
         this.target_B_current_Y_position = targetB.getBoundingClientRect().top;
 
-//        console.log(`Position actuelle de l'élément A sur l'axe Y : ${this.target_A_current_Y_position}`);
-//        console.log(`Position actuelle de l'élément B sur l'axe Y : ${this.target_B_current_Y_position}`);
+        //        console.log(`Position actuelle de l'élément A sur l'axe Y : ${this.target_A_current_Y_position}`);
+        //        console.log(`Position actuelle de l'élément B sur l'axe Y : ${this.target_B_current_Y_position}`);
 
     }
 
     //Permet de calculer si les ennemis rencontrent le joueur 
-public collideWithBaseLineHitBox():boolean{
-    if(this.target_A_element != null && this.target_B_element != null){
-        this.setPosition(this.target_A_element, this.target_B_element);
-        if(this.target_A_current_Y_position >= this.target_B_current_Y_position){
-            console.log(`Target A : ${this.target_A_current_Y_position}`)
-            console.log('COLLISION !!!!!!!!!!!!!!!!!!!!!');
-            return true;
-        }
-    }
-    return false;
-}
-
-
-    public collideWithPlayer(playerHitbox:HTMLElement, ennemyContainer:HTMLElement){
-        if(playerHitbox && ennemyContainer){
-            this.setPosition(playerHitbox, ennemyContainer);
-            if(this.target_B_current_Y_position <= this.target_A_current_Y_position){
-                console.log('Collision entre les deux éléments')
-            }
-            else{
-                console.log('Pas de collision');
+    public collideWithBaseLineHitBox(): boolean {
+        if (this.target_A_element != null && this.target_B_element != null) {
+            this.setPosition(this.target_A_element, this.target_B_element);
+            if (this.target_A_current_Y_position >= this.target_B_current_Y_position) {
+                ;
+                return true;
             }
         }
+        return false;
     }
 }
 
-class ArrayOfElelements{
+export class CollisionElements {
     arrayOfEnnemys: HTMLElement[];
     arrayOfLazers: HTMLElement[];
 
-    constructor(){
-        this.arrayOfEnnemys = [];
-        this.arrayOfLazers = [];
+    lazerCurrentPositionX: number;
+    lazerCurrentPositionY: number;
+    lazerWidth: number;
+    lazerHeight: number;
+    ennemysCurrentPositionX: number;
+    ennemysCurrentPositionY: number;
+    ennemyWidth: number;
+    ennemyHeight: number;
+
+    constructor(lazer: HTMLElement[], ennemys: HTMLElement[]) {
+        this.arrayOfEnnemys = ennemys;
+        this.arrayOfLazers = lazer;
+
+        this.lazerCurrentPositionX = 0;
+        this.lazerCurrentPositionY = 0;
+        this.lazerWidth = 0;
+        this.lazerHeight = 0;
+
+        this.ennemysCurrentPositionX = 0;
+        this.ennemysCurrentPositionY = 0;
+        this.ennemyWidth = 0;
+        this.ennemyHeight = 0;
     }
+
+    checkPosition() {
+        for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
+            for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
+                this.setPosition(this.arrayOfLazers[lazerIndex], this.arrayOfEnnemys[ennemyIndex])
+                this.setInformation(ennemyIndex, lazerIndex);
+
+
+
+                if (this.lazerCurrentPositionX >= this.ennemysCurrentPositionX) {
+
+                }
+
+            }
+        }
+    }
+
+    private setInformation(lazerIndex: number, ennemyIndex: number) {
+        this.lazerWidth = this.arrayOfLazers[lazerIndex].getBoundingClientRect().width;
+        this.lazerHeight = this.arrayOfLazers[lazerIndex].getBoundingClientRect().height;
+
+        this.ennemyWidth = this.arrayOfEnnemys[ennemyIndex].getBoundingClientRect().width;
+        this.ennemyHeight = this.arrayOfEnnemys[ennemyIndex].getBoundingClientRect().height;
+
+        console.log(`Laser (W/H) : ${this.lazerWidth}/${this.lazerHeight}`);
+        console.log(`Ennemy (W/H) : ${this.ennemyWidth} / ${this.ennemyHeight};`)
+    }
+
+
+    private setPosition(targetA: HTMLElement, targetB: HTMLElement): void {
+        this.lazerCurrentPositionX = targetA.getBoundingClientRect().left;
+        this.lazerCurrentPositionY = targetA.getBoundingClientRect().top;
+        this.ennemysCurrentPositionX = targetB.getBoundingClientRect().left;
+        this.ennemysCurrentPositionY = targetB.getBoundingClientRect().top;
+
+        console.log(`Lazer (X/Y) : ${this.lazerCurrentPositionX} / ${this.lazerCurrentPositionY}`);
+        console.log(`Ennemy (X/Y) : ${this.ennemysCurrentPositionX} / ${this.ennemysCurrentPositionY}`);
+    }
+
 }

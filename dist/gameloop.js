@@ -1,5 +1,6 @@
 import { Player } from "./player.js";
-import { Collision } from "./collision.js";
+import { PlayerCollision } from "./collision.js";
+import { CollisionElements } from "./collision.js";
 import { EnnemyContainer } from "./ennemy.js";
 export class GameLoop {
     constructor() {
@@ -17,9 +18,10 @@ export class GameLoop {
             this.player.createPlayer(this.gameContainer);
             this.player.createBaseLineHitBox(this.gameContainer, this.player.baselineHitBox);
             this.ennemyContainer = new EnnemyContainer(this.gameContainer);
-            this.collisionWithBaseLine = new Collision(this.ennemyContainer.getContainerInformation(), //Target A
+            this.collisionWithBaseLine = new PlayerCollision(this.ennemyContainer.getContainerInformation(), //Target A
             this.player.getBaseLineHitBox(), //Target B
             this.ennemyContainer, this.player);
+            this.collisionElements = new CollisionElements(this.player.arrayBeam, this.ennemyContainer.getArrayEnnemy());
         }
         else {
             console.log("Erreur");
@@ -46,6 +48,7 @@ export class GameLoop {
         if (this.collisionWithBaseLine.collideWithBaseLineHitBox() == true) {
             this.ennemyContainer.canMoove = false;
         }
+        this.collisionElements.checkPosition();
     }
     // Mise à jour des éléments du DOM
     updateDOM() {

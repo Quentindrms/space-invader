@@ -1,4 +1,4 @@
-export class Collision {
+export class PlayerCollision {
     /** Récupère un élément HTML A et B et l'enregistre dans le target element correspondant, permet d'accèder aux propriétés d'un élément HTML au sein de la classe
      */
     constructor(targetA, targetB, targetAObj, targetBobj) {
@@ -29,28 +29,50 @@ export class Collision {
         if (this.target_A_element != null && this.target_B_element != null) {
             this.setPosition(this.target_A_element, this.target_B_element);
             if (this.target_A_current_Y_position >= this.target_B_current_Y_position) {
-                console.log(`Target A : ${this.target_A_current_Y_position}`);
-                console.log('COLLISION !!!!!!!!!!!!!!!!!!!!!');
+                ;
                 return true;
             }
         }
         return false;
     }
-    collideWithPlayer(playerHitbox, ennemyContainer) {
-        if (playerHitbox && ennemyContainer) {
-            this.setPosition(playerHitbox, ennemyContainer);
-            if (this.target_B_current_Y_position <= this.target_A_current_Y_position) {
-                console.log('Collision entre les deux éléments');
-            }
-            else {
-                console.log('Pas de collision');
+}
+export class CollisionElements {
+    constructor(lazer, ennemys) {
+        this.arrayOfEnnemys = ennemys;
+        this.arrayOfLazers = lazer;
+        this.lazerCurrentPositionX = 0;
+        this.lazerCurrentPositionY = 0;
+        this.lazerWidth = 0;
+        this.lazerHeight = 0;
+        this.ennemysCurrentPositionX = 0;
+        this.ennemysCurrentPositionY = 0;
+        this.ennemyWidth = 0;
+        this.ennemyHeight = 0;
+    }
+    checkPosition() {
+        for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
+            for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
+                this.setPosition(this.arrayOfLazers[lazerIndex], this.arrayOfEnnemys[ennemyIndex]);
+                this.setInformation(ennemyIndex, lazerIndex);
+                if (this.lazerCurrentPositionX >= this.ennemysCurrentPositionX) {
+                }
             }
         }
     }
-}
-class ArrayOfElelements {
-    constructor() {
-        this.arrayOfEnnemys = [];
-        this.arrayOfLazers = [];
+    setInformation(lazerIndex, ennemyIndex) {
+        this.lazerWidth = this.arrayOfLazers[lazerIndex].getBoundingClientRect().width;
+        this.lazerHeight = this.arrayOfLazers[lazerIndex].getBoundingClientRect().height;
+        this.ennemyWidth = this.arrayOfEnnemys[ennemyIndex].getBoundingClientRect().width;
+        this.ennemyHeight = this.arrayOfEnnemys[ennemyIndex].getBoundingClientRect().height;
+        console.log(`Laser (W/H) : ${this.lazerWidth}/${this.lazerHeight}`);
+        console.log(`Ennemy (W/H) : ${this.ennemyWidth} / ${this.ennemyHeight};`);
+    }
+    setPosition(targetA, targetB) {
+        this.lazerCurrentPositionX = targetA.getBoundingClientRect().left;
+        this.lazerCurrentPositionY = targetA.getBoundingClientRect().top;
+        this.ennemysCurrentPositionX = targetB.getBoundingClientRect().left;
+        this.ennemysCurrentPositionY = targetB.getBoundingClientRect().top;
+        console.log(`Lazer (X/Y) : ${this.lazerCurrentPositionX} / ${this.lazerCurrentPositionY}`);
+        console.log(`Ennemy (X/Y) : ${this.ennemysCurrentPositionX} / ${this.ennemysCurrentPositionY}`);
     }
 }

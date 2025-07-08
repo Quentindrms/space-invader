@@ -31,7 +31,7 @@ export class Ennemys {
      * ennemis sont ensuites ajoutés, le nombre d'ennemi dépend de la valeur passée en 
      * paramètre (NumberOf)
      */
-    public createEnnemy(target: HTMLElement | null, numberOf: number){
+    public createEnnemy(target: HTMLElement | null, numberOf: number) {
         if (target != null) {
             /** Ajoute le nombre d'ennemis reçu en paramètre de la fonction et les ajoutes dans ennemyContainer */
             for (let i = 0; i < numberOf; i++) {
@@ -65,9 +65,10 @@ export class Ennemys {
     private addToArrayEnnemy(element: HTMLElement) {
         console.log(`${element} ajouté au tableau`)
         this.arrayEnnemy.push(element);
+        console.log(this.getArrayEnnemy())
     }
 
-    public getArrayEnnemy():HTMLElement[]{
+    public getArrayEnnemy(): HTMLElement[] {
         return this.arrayEnnemy;
     }
 }
@@ -76,7 +77,7 @@ export class Ennemys {
  * Gère aussi le déplacement du conteneur 
 */
 
-export class EnnemyContainer{
+export class EnnemyContainer {
     ennemyContainerWidth: string | null;
     ennemyContainerHeight: string;
     ennemyContainerDisplay: string;
@@ -141,7 +142,7 @@ export class EnnemyContainer{
     /** Déplace le conteneur sur l'axe principale et l'axe secondaire suivant un patern prédéfinit
      * 
      */
-    
+
     public containerMove(deltaTime: number, speed: number) {
         let positionX: number = parseInt(this.ennemyContainerElement.style.left || "0", 10);
         let positionY: number = parseInt(this.ennemyContainerElement.style.top || "0", 10);
@@ -157,9 +158,9 @@ export class EnnemyContainer{
         const minX = 10;
 
         // Déplacement selon la direction
-        if(this.canMoove == true){
-        positionX += Math.round(((speed * deltaTime) * this.direction));
-        positionX = Math.round(positionX)
+        if (this.canMoove == true) {
+            positionX += Math.round(((speed * deltaTime) * this.direction));
+            positionX = Math.round(positionX)
         }
 
         // Inversion de direction aux bords
@@ -176,7 +177,7 @@ export class EnnemyContainer{
             this.direction = 1;
             positionX = minX;
             this.bounceOnBorder += 1;
-            if (this.bounceOnBorder == 3 ) {
+            if (this.bounceOnBorder == 3) {
                 positionY += (speed * deltaTime);
                 this.bounceOnBorder = 0;
             }
@@ -190,7 +191,7 @@ export class EnnemyContainer{
         return this.ennemyContainerElement
     }
 
-    public stopContainer(){
-        
+    public getArrayEnnemy(): HTMLElement[] {
+        return this.ennemy.getArrayEnnemy();
     }
 }

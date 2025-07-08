@@ -1,6 +1,4 @@
-import { Player } from './player.js'
-import { EnnemyContainer } from './ennemy.js';
-import { Collision } from './collision.js';
+
 
 import { GameLoop } from './gameloop.js';
 
