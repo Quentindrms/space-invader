@@ -74,11 +74,15 @@ export class GameLoop {
     update(dt: number) {
         this.player.updateLasers(dt);
         this.player.updatePlayerPosition();
+        if(this.collision.collideWithBaseLineHitBox()){
+            this.ennemyContainer.containerMove(0, 0); // Arrête la boucle en  cas de collision
+            console.log('Arrêt du mouvement');
+        }
     }
 
     // Mise à jour des éléments du DOM
     updateDOM() {
-        this.ennemyContainer.containerMove(this.dt, 0.20);
+        this.ennemyContainer.containerMove(this.dt, 1);
         console.log("Update DOM");
     }
 }

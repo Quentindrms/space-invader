@@ -14,6 +14,8 @@ export class Collision {
     target_A_obj: EnnemyContainer;
     target_B_obj: Object;
 
+    isInMove: boolean;
+
     refresh_rate: number; //Temps en miliseconde
 
     intervalID: number;
@@ -36,6 +38,8 @@ export class Collision {
         this.refresh_rate = 1000;
         this.intervalID = 0;
 
+        this.isInMove = true;
+
         this.collideWithBaseLineHitBox();
     }
 
@@ -53,7 +57,7 @@ export class Collision {
     }
 
     //Permet de calculer si deux éléments 
-
+/** Refaire la fonction pour qu'elle renvoie une valeure capable d'arrêter le mouvement  */
 public collideWithBaseLineHitBox(): boolean {
 
         if (this.target_A_element != null && this.target_B_element != null) {
@@ -62,7 +66,7 @@ public collideWithBaseLineHitBox(): boolean {
                     this.setPosition(this.target_A_element, this.target_B_element);
                     if (this.collideWithBaseLineHitBox() == true) {
                         clearInterval(this.intervalID);
-                        this.target_A_obj.stopMovement(true);
+                        return true;
                     }
                 }
             }, this.refresh_rate);

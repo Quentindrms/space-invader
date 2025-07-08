@@ -12,6 +12,7 @@ export class Collision {
         this.target_B_obj = targetBobj;
         this.refresh_rate = 1000;
         this.intervalID = 0;
+        this.isInMove = true;
         this.collideWithBaseLineHitBox();
     }
     /** Récupère les éléments A et B à un moment T puis enregistre leur position sur l'axe X et Y */
@@ -24,6 +25,7 @@ export class Collision {
         //        console.log(`Position actuelle de l'élément B sur l'axe Y : ${this.target_B_current_Y_position}`);
     }
     //Permet de calculer si deux éléments 
+    /** Refaire la fonction pour qu'elle renvoie une valeure capable d'arrêter le mouvement  */
     collideWithBaseLineHitBox() {
         if (this.target_A_element != null && this.target_B_element != null) {
             this.intervalID = window.setTimeout(() => {
@@ -31,7 +33,7 @@ export class Collision {
                     this.setPosition(this.target_A_element, this.target_B_element);
                     if (this.collideWithBaseLineHitBox() == true) {
                         clearInterval(this.intervalID);
-                        this.target_A_obj.stopMovement(true);
+                        return true;
                     }
                 }
             }, this.refresh_rate);

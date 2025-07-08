@@ -192,4 +192,8 @@ export class EnnemyContainer{
     public getContainerInformation(): HTMLElement {
         return this.ennemyContainerElement
     }
+
+    public stopContainer(){
+        
+    }
 }

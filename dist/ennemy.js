@@ -136,4 +136,6 @@ export class EnnemyContainer {
     getContainerInformation() {
         return this.ennemyContainerElement;
     }
+    stopContainer() {
+    }
 }
