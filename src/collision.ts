@@ -98,17 +98,22 @@ export class CollisionElements {
     }
 
     checkPosition() {
-        for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
-            for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
-                this.setPosition(this.arrayOfLazers[lazerIndex], this.arrayOfEnnemys[ennemyIndex])
-                this.setInformation(ennemyIndex, lazerIndex);
+        if (this.arrayOfLazers != undefined) {
+            for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
+                for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
+                    this.setPosition(this.arrayOfLazers[lazerIndex], this.arrayOfEnnemys[ennemyIndex])
+                    this.setInformation(ennemyIndex, lazerIndex);
 
+/** Problème de boucle infinie ici : vérifier si l'erreur ne vient pas du fait que des éléments supprimés du tableau sont effectivement supprimés
+ * Logiquement les éléments ne sont pas supprimés du tableau après leur disparition car pas de fonctions en ce sens
+ * Implémenter une fonction qui met à jour le tableau des lazer quand un lazer est supprimé du DOM
+*/
 
+                    if (this.lazerCurrentPositionX >= this.ennemysCurrentPositionX) {
 
-                if (this.lazerCurrentPositionX >= this.ennemysCurrentPositionX) {
+                    }
 
                 }
-
             }
         }
     }
@@ -119,9 +124,6 @@ export class CollisionElements {
 
         this.ennemyWidth = this.arrayOfEnnemys[ennemyIndex].getBoundingClientRect().width;
         this.ennemyHeight = this.arrayOfEnnemys[ennemyIndex].getBoundingClientRect().height;
-
-        console.log(`Laser (W/H) : ${this.lazerWidth}/${this.lazerHeight}`);
-        console.log(`Ennemy (W/H) : ${this.ennemyWidth} / ${this.ennemyHeight};`)
     }
 
 
@@ -130,9 +132,6 @@ export class CollisionElements {
         this.lazerCurrentPositionY = targetA.getBoundingClientRect().top;
         this.ennemysCurrentPositionX = targetB.getBoundingClientRect().left;
         this.ennemysCurrentPositionY = targetB.getBoundingClientRect().top;
-
-        console.log(`Lazer (X/Y) : ${this.lazerCurrentPositionX} / ${this.lazerCurrentPositionY}`);
-        console.log(`Ennemy (X/Y) : ${this.ennemysCurrentPositionX} / ${this.ennemysCurrentPositionY}`);
     }
 
 }
