@@ -75,7 +75,7 @@ export class GameLoop {
         requestAnimationFrame(() => this.loop());
     }
 
-    // Mise à jour de la logique du jeu
+    // Mise à jour de la logiqueÒ du jeu
     update(dt: number) {
         this.player.updateLasers(dt);
         this.player.updatePlayerPosition();

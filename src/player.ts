@@ -56,7 +56,8 @@ export class Player {
     if (this.player != null && target != null) {
       this.player.style.width = this.witdh;
       this.player.style.height = this.height;
-      this.player.style.backgroundColor = this.color;
+      this.player.style.backgroundImage = "url('../../img/player.png')";
+      this.player.style.backgroundSize = 'contain';
       this.player.style.display = this.display;
       this.player.style.position = this.position;
       this.player.style.justifyContent = this.align;
@@ -103,6 +104,7 @@ export class Player {
   playerShot(action: KeyboardEvent) {
     if (action.key === " ") {
       const lazer = new Lazer(this.player, this.playerPositionY);
+      action.preventDefault();
       this.addToArrayBeam(lazer.beam);
     }
   }
@@ -147,8 +149,11 @@ export class Player {
       beam.style.top = `${newY}px`;
 
       if (newY <= 0) {
+        console.log(this.arrayBeam);
         beam.remove();
         this.removeFromArrayBeam(beam);
+        console.log('Suppression du lazer, affichage des lazer contenus dans le tableau')
+
       }
     }
   }

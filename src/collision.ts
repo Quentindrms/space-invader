@@ -2,6 +2,7 @@ import { EnnemyContainer } from './ennemy.js'
 import { Ennemys } from './ennemy.js';
 import { Lazer, Player } from './player.js';
 
+// La classe PlayerCollision n'est pas modifiée ici, car la question porte sur la collision laser-ennemis
 export class PlayerCollision {
     target_A_current_X_position: number;
     target_A_current_Y_position: number;
@@ -19,9 +20,6 @@ export class PlayerCollision {
     refresh_rate: number; //Temps en miliseconde
 
     intervalID: number;
-
-    /** Récupère un élément HTML A et B et l'enregistre dans le target element correspondant, permet d'accèder aux propriétés d'un élément HTML au sein de la classe 
-     */
 
     constructor(targetA: HTMLElement, targetB: HTMLElement, targetAObj: EnnemyContainer, targetBobj: Object) {
         this.target_A_current_X_position = 0;
@@ -43,25 +41,17 @@ export class PlayerCollision {
         this.collideWithBaseLineHitBox();
     }
 
-    /** Récupère les éléments A et B à un moment T puis enregistre leur position sur l'axe X et Y */
-
     private setPosition(targetA: HTMLElement, targetB: HTMLElement): void {
         this.target_A_current_X_position = targetA.getBoundingClientRect().left;
         this.target_A_current_Y_position = targetA.getBoundingClientRect().top;
         this.target_B_current_X_position = targetB.getBoundingClientRect().left;
         this.target_B_current_Y_position = targetB.getBoundingClientRect().top;
-
-        //        console.log(`Position actuelle de l'élément A sur l'axe Y : ${this.target_A_current_Y_position}`);
-        //        console.log(`Position actuelle de l'élément B sur l'axe Y : ${this.target_B_current_Y_position}`);
-
     }
 
-    //Permet de calculer si les ennemis rencontrent le joueur 
     public collideWithBaseLineHitBox(): boolean {
         if (this.target_A_element != null && this.target_B_element != null) {
             this.setPosition(this.target_A_element, this.target_B_element);
             if (this.target_A_current_Y_position >= this.target_B_current_Y_position) {
-                ;
                 return true;
             }
         }
@@ -98,40 +88,59 @@ export class CollisionElements {
     }
 
     checkPosition() {
-        if (this.arrayOfLazers != undefined) {
-            for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
-                for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
-                    this.setPosition(this.arrayOfLazers[lazerIndex], this.arrayOfEnnemys[ennemyIndex])
-                    this.setInformation(ennemyIndex, lazerIndex);
+        for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
+            // console.log('Boucle ennemyIndex'); // Décommenter pour le débogage
+            const currentEnnemy = this.arrayOfEnnemys[ennemyIndex];
 
-/** Problème de boucle infinie ici : vérifier si l'erreur ne vient pas du fait que des éléments supprimés du tableau sont effectivement supprimés
- * Logiquement les éléments ne sont pas supprimés du tableau après leur disparition car pas de fonctions en ce sens
- * Implémenter une fonction qui met à jour le tableau des lazer quand un lazer est supprimé du DOM
-*/
+            // Récupérer les informations de l'ennemi une seule fois par ennemi
+            this.ennemysCurrentPositionX = currentEnnemy.getBoundingClientRect().left;
+            this.ennemysCurrentPositionY = currentEnnemy.getBoundingClientRect().top;
+            this.ennemyWidth = currentEnnemy.getBoundingClientRect().width;
+            this.ennemyHeight = currentEnnemy.getBoundingClientRect().height;
 
-                    if (this.lazerCurrentPositionX >= this.ennemysCurrentPositionX) {
+            for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
+                // console.log('Boucle arrayOfLazers') // Décommenter pour le débogage
+                const currentLazer = this.arrayOfLazers[lazerIndex];
+
+                if (currentLazer != null) {
+                    this.lazerCurrentPositionX = currentLazer.getBoundingClientRect().left;
+                    this.lazerCurrentPositionY = currentLazer.getBoundingClientRect().top;
+                    this.lazerWidth = currentLazer.getBoundingClientRect().width;
+                    this.lazerHeight = currentLazer.getBoundingClientRect().height;
+
+                    // Vérifier s'il y a une collision
+                    if (this.lazerCurrentPositionX < this.ennemysCurrentPositionX + this.ennemyWidth &&
+                        this.lazerCurrentPositionX + this.lazerWidth > this.ennemysCurrentPositionX &&
+                        this.lazerCurrentPositionY < this.ennemysCurrentPositionY + this.ennemyHeight &&
+                        this.lazerCurrentPositionY + this.lazerHeight > this.ennemysCurrentPositionY) {
+                        console.log('Collision :)');
+                        console.log(`Laser (X/Y/W/H) : ${this.lazerCurrentPositionX} / ${this.lazerCurrentPositionY} / ${this.lazerWidth} / ${this.lazerHeight}`);
+                        console.log(`Ennemi (X/Y/W/H) : ${this.ennemysCurrentPositionX} / ${this.ennemysCurrentPositionY} / ${this.ennemyWidth} / ${this.ennemyHeight}`);
 
                     }
-
                 }
             }
         }
     }
 
-    private setInformation(lazerIndex: number, ennemyIndex: number) {
-        this.lazerWidth = this.arrayOfLazers[lazerIndex].getBoundingClientRect().width;
-        this.lazerHeight = this.arrayOfLazers[lazerIndex].getBoundingClientRect().height;
+    // setInformation et setPosition sont désormais gérés directement dans checkPosition
+    // pour une meilleure clarté et pour éviter les problèmes d'ordre d'appel ou de paramètres.
+    // Tu peux les supprimer si tu ne les utilises plus ailleurs.
+    private setInformation(lazerElement: HTMLElement, ennemyElement: HTMLElement) {
+        this.lazerWidth = lazerElement.getBoundingClientRect().width;
+        this.lazerHeight = lazerElement.getBoundingClientRect().height;
 
-        this.ennemyWidth = this.arrayOfEnnemys[ennemyIndex].getBoundingClientRect().width;
-        this.ennemyHeight = this.arrayOfEnnemys[ennemyIndex].getBoundingClientRect().height;
+        this.ennemyWidth = ennemyElement.getBoundingClientRect().width;
+        this.ennemyHeight = ennemyElement.getBoundingClientRect().height;
     }
 
 
-    private setPosition(targetA: HTMLElement, targetB: HTMLElement): void {
-        this.lazerCurrentPositionX = targetA.getBoundingClientRect().left;
-        this.lazerCurrentPositionY = targetA.getBoundingClientRect().top;
-        this.ennemysCurrentPositionX = targetB.getBoundingClientRect().left;
-        this.ennemysCurrentPositionY = targetB.getBoundingClientRect().top;
+    private setPosition(lazerElement: HTMLElement, ennemyElement: HTMLElement): void {
+        this.lazerCurrentPositionX = lazerElement.getBoundingClientRect().left;
+        this.lazerCurrentPositionY = lazerElement.getBoundingClientRect().top;
+
+        this.ennemysCurrentPositionX = ennemyElement.getBoundingClientRect().left;
+        this.ennemysCurrentPositionY = ennemyElement.getBoundingClientRect().top;
     }
 
 }

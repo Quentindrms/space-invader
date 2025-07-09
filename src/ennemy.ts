@@ -43,7 +43,8 @@ export class Ennemys {
                     ennemyElement.id = "Ennemi";
                     ennemyElement.style.width = `${this.witdh}px`;
                     ennemyElement.style.height = `${this.height}px`;
-                    ennemyElement.style.backgroundColor = 'red';
+                    ennemyElement.style.backgroundImage = "url('../../img/ennemy.png')";
+                    ennemyElement.style.backgroundSize = 'contain';
                     ennemyElement.style.display = "flex";
                     ennemyElement.style.alignItems = "end";
 
@@ -52,7 +53,6 @@ export class Ennemys {
                     this.hitBox.id = 'hitbox';
                     this.hitBox.style.width = `${this.witdh}px`
                     this.hitBox.style.height = '10px';
-                    this.hitBox.style.backgroundColor = 'green';
                     ennemyElement.appendChild(this.hitBox);
 
                     console.log(`${i} éléménts crées sur ${numberOf}`)
