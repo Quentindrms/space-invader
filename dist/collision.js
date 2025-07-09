@@ -42,33 +42,26 @@ export class CollisionElements {
         this.ennemysCurrentPositionY = 0;
         this.ennemyWidth = 0;
         this.ennemyHeight = 0;
+        this.ennemyIndex = 0;
     }
     checkPosition() {
         for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
             // console.log('Boucle ennemyIndex'); // Décommenter pour le débogage
             const currentEnnemy = this.arrayOfEnnemys[ennemyIndex];
+            this.setIndexOnCollide(ennemyIndex);
             // Récupérer les informations de l'ennemi une seule fois par ennemi
             this.ennemysCurrentPositionX = currentEnnemy.getBoundingClientRect().left;
             this.ennemysCurrentPositionY = currentEnnemy.getBoundingClientRect().top;
             this.ennemyWidth = currentEnnemy.getBoundingClientRect().width;
             this.ennemyHeight = currentEnnemy.getBoundingClientRect().height;
             for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
-                // console.log('Boucle arrayOfLazers') // Décommenter pour le débogage
+                // console.log('Boucle arrayOfLazers') //
                 const currentLazer = this.arrayOfLazers[lazerIndex];
                 if (currentLazer != null) {
                     this.lazerCurrentPositionX = currentLazer.getBoundingClientRect().left;
                     this.lazerCurrentPositionY = currentLazer.getBoundingClientRect().top;
                     this.lazerWidth = currentLazer.getBoundingClientRect().width;
                     this.lazerHeight = currentLazer.getBoundingClientRect().height;
-                    // Vérifier s'il y a une collision
-                    if (this.lazerCurrentPositionX < this.ennemysCurrentPositionX + this.ennemyWidth &&
-                        this.lazerCurrentPositionX + this.lazerWidth > this.ennemysCurrentPositionX &&
-                        this.lazerCurrentPositionY < this.ennemysCurrentPositionY + this.ennemyHeight &&
-                        this.lazerCurrentPositionY + this.lazerHeight > this.ennemysCurrentPositionY) {
-                        console.log('Collision :)');
-                        console.log(`Laser (X/Y/W/H) : ${this.lazerCurrentPositionX} / ${this.lazerCurrentPositionY} / ${this.lazerWidth} / ${this.lazerHeight}`);
-                        console.log(`Ennemi (X/Y/W/H) : ${this.ennemysCurrentPositionX} / ${this.ennemysCurrentPositionY} / ${this.ennemyWidth} / ${this.ennemyHeight}`);
-                    }
                 }
             }
         }
@@ -82,10 +75,30 @@ export class CollisionElements {
         this.ennemyWidth = ennemyElement.getBoundingClientRect().width;
         this.ennemyHeight = ennemyElement.getBoundingClientRect().height;
     }
+    getCollision() {
+        // Vérifier s'il y a une collision
+        if (this.lazerCurrentPositionX < this.ennemysCurrentPositionX + this.ennemyWidth &&
+            this.lazerCurrentPositionX + this.lazerWidth > this.ennemysCurrentPositionX &&
+            this.lazerCurrentPositionY < this.ennemysCurrentPositionY + this.ennemyHeight &&
+            this.lazerCurrentPositionY + this.lazerHeight > this.ennemysCurrentPositionY) {
+            console.log('Collision :)');
+            console.log(`Laser (X/Y/W/H) : ${this.lazerCurrentPositionX} / ${this.lazerCurrentPositionY} / ${this.lazerWidth} / ${this.lazerHeight}`);
+            console.log(`Ennemi (X/Y/W/H) : ${this.ennemysCurrentPositionX} / ${this.ennemysCurrentPositionY} / ${this.ennemyWidth} / ${this.ennemyHeight}`);
+            return true;
+        }
+        return false;
+    }
     setPosition(lazerElement, ennemyElement) {
         this.lazerCurrentPositionX = lazerElement.getBoundingClientRect().left;
         this.lazerCurrentPositionY = lazerElement.getBoundingClientRect().top;
         this.ennemysCurrentPositionX = ennemyElement.getBoundingClientRect().left;
         this.ennemysCurrentPositionY = ennemyElement.getBoundingClientRect().top;
+    }
+    setIndexOnCollide(numb) {
+        this.ennemyIndex = numb;
+    }
+    //Retourne l'index de l'élément touché par le laser 
+    getIndexOnCollide() {
+        return this.ennemyIndex;
     }
 }

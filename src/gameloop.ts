@@ -83,6 +83,9 @@ export class GameLoop {
             this.ennemyContainer.canMoove = false;
         }
         this.collisionElements.checkPosition();
+        if(this.collisionElements.getCollision() == true){
+            console.log(`Index on collide : ${this.collisionElements.getIndexOnCollide()}`);
+        }
     }
 
     // Mise à jour des éléments du DOM
