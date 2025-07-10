@@ -33,6 +33,7 @@ export class GameLoop {
         this.player = new Player("50", "50", "white");
         if (this.gameContainer) {
             this.player.createPlayer(this.gameContainer);
+            this.gameContainer.style.flexDirection = "row";
             this.player.createBaseLineHitBox(
                 this.gameContainer,
                 this.player.baselineHitBox

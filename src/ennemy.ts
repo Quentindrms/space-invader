@@ -116,7 +116,7 @@ export class EnnemyContainer {
         this.ennemyContainerDisplay = 'flex';
         this.ennemyContainerPosition = 'absolute';
         this.ennemyContainerTop = `25px`;
-        this.ennemyContainerGap = '25px';
+        this.ennemyContainerGap = '15px';
         this.ennemyContainerPositionY = 0;
         this.bounceOnBorder = 0;
 

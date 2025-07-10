@@ -1,5 +1,6 @@
 export class Player {
     constructor(witdh, heigth, color) {
+        var _a;
         this.witdh = witdh + "px";
         this.height = heigth + "px";
         this.color = color;
@@ -18,7 +19,7 @@ export class Player {
         this.baselineHitBox = document.createElement("div");
         this.baselineHitBox.id = "hitbox";
         this.baselineHitBox.style.height = `${this.height}`;
-        this.baselineHitBox.style.width = `750px`;
+        this.baselineHitBox.style.width = `${(_a = document.getElementById('gameTarget')) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect().width}px`;
         this.baselineHitBox.style.position = "absolute";
         this.baselineHitBox.style.display = "flex";
         this.baselineHitBox.style.borderTop = "2px";
@@ -136,7 +137,7 @@ export class Player {
 export class Lazer {
     constructor(player, playerPos) {
         this.width = "5px";
-        this.height = "25px";
+        this.height = "15px";
         this.backgroundColor = "pink";
         this.position = "absolute";
         this.playerPosition = playerPos;
