@@ -55,7 +55,6 @@ export class Ennemys {
                     this.hitBox.style.height = '10px';
                     ennemyElement.appendChild(this.hitBox);
 
-                    console.log(`${i} éléménts crées sur ${numberOf}`)
                     this.addToArrayEnnemy(ennemyElement);
                 }
             }
@@ -63,9 +62,16 @@ export class Ennemys {
     }
     //Ajoute un élément dans le tableau
     private addToArrayEnnemy(element: HTMLElement) {
-        console.log(`${element} ajouté au tableau`)
         this.arrayEnnemy.push(element);
-        console.log(this.getArrayEnnemy())
+    }
+
+    public removeEnnemyDOM(index: number) {
+        this.arrayEnnemy[index].style.display = 'none';
+    }
+
+    public removeToArrayEnnemy(index: number) {
+        this.removeEnnemyDOM(index);
+        this.arrayEnnemy.splice(index, 1);
     }
 
     public getArrayEnnemy(): HTMLElement[] {
@@ -193,5 +199,10 @@ export class EnnemyContainer {
 
     public getArrayEnnemy(): HTMLElement[] {
         return this.ennemy.getArrayEnnemy();
+    }
+
+    public asCollideWithLazer(index: number) {
+        console.log(`Suppression de l'ennemi ${index}`);
+        this.ennemy.removeToArrayEnnemy(index);
     }
 }

@@ -62,6 +62,7 @@ export class PlayerCollision {
 export class CollisionElements {
     arrayOfEnnemys: HTMLElement[];
     arrayOfLazers: HTMLElement[];
+    lazerIndex: number;
 
     lazerCurrentPositionX: number;
     lazerCurrentPositionY: number;
@@ -76,6 +77,7 @@ export class CollisionElements {
     constructor(lazer: HTMLElement[], ennemys: HTMLElement[]) {
         this.arrayOfEnnemys = ennemys;
         this.arrayOfLazers = lazer;
+        this.lazerIndex = 0;
 
         this.lazerCurrentPositionX = 0;
         this.lazerCurrentPositionY = 0;
@@ -90,28 +92,47 @@ export class CollisionElements {
     }
 
     checkPosition() {
+        // Parcourir tous les ennemis
         for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
-            // console.log('Boucle ennemyIndex'); // Décommenter pour le débogage
             const currentEnnemy = this.arrayOfEnnemys[ennemyIndex];
-            this.setIndexOnCollide(ennemyIndex);
-            // Récupérer les informations de l'ennemi une seule fois par ennemi
-            this.ennemysCurrentPositionX = currentEnnemy.getBoundingClientRect().left;
-            this.ennemysCurrentPositionY = currentEnnemy.getBoundingClientRect().top;
-            this.ennemyWidth = currentEnnemy.getBoundingClientRect().width;
-            this.ennemyHeight = currentEnnemy.getBoundingClientRect().height;
 
-            for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
-                // console.log('Boucle arrayOfLazers') //
-                const currentLazer = this.arrayOfLazers[lazerIndex];
+            // Vérifier que l'ennemi existe et est visible
+            if (currentEnnemy && currentEnnemy.offsetParent !== null) {
+                // Récupérer les informations de l'ennemi une seule fois
+                this.ennemysCurrentPositionX = currentEnnemy.getBoundingClientRect().left;
+                this.ennemysCurrentPositionY = currentEnnemy.getBoundingClientRect().top;
+                this.ennemyWidth = currentEnnemy.getBoundingClientRect().width;
+                this.ennemyHeight = currentEnnemy.getBoundingClientRect().height;
 
-                if (currentLazer != null) {
-                    this.lazerCurrentPositionX = currentLazer.getBoundingClientRect().left;
-                    this.lazerCurrentPositionY = currentLazer.getBoundingClientRect().top;
-                    this.lazerWidth = currentLazer.getBoundingClientRect().width;
-                    this.lazerHeight = currentLazer.getBoundingClientRect().height;
+                // Parcourir tous les lasers pour cet ennemi
+                for (let lazerIndex = 0; lazerIndex < this.arrayOfLazers.length; lazerIndex++) {
+                    const currentLazer = this.arrayOfLazers[lazerIndex];
+
+                    // Vérifier que le laser existe et est visible
+                    if (currentLazer && currentLazer.offsetParent !== null) {
+                        // Récupérer les informations du laser
+                        this.lazerCurrentPositionX = currentLazer.getBoundingClientRect().left;
+                        this.lazerCurrentPositionY = currentLazer.getBoundingClientRect().top;
+                        this.lazerWidth = currentLazer.getBoundingClientRect().width;
+                        this.lazerHeight = currentLazer.getBoundingClientRect().height;
+
+                        // MAINTENANT on teste la collision pour cette paire spécifique
+                        if (this.testCollisionForCurrentPair()) {
+
+                            // Stocker l'index de l'ennemi touché
+                            this.setIndexOnCollide(ennemyIndex);
+
+                            //Stocker l'index du laser ayant touché 
+                            this.setLazerIndexOnCollide(lazerIndex);
+
+                            // Retourner true dès qu'une collision est trouvée
+                            return true;
+                        }
+                    }
                 }
             }
         }
+        return false;
     }
 
     // setInformation et setPosition sont désormais gérés directement dans checkPosition
@@ -125,15 +146,12 @@ export class CollisionElements {
         this.ennemyHeight = ennemyElement.getBoundingClientRect().height;
     }
 
-    public getCollision(): boolean {
-        // Vérifier s'il y a une collision
+    private testCollisionForCurrentPair(): boolean {
+        // Utiliser l'algorithme AABB (Axis-Aligned Bounding Box)
         if (this.lazerCurrentPositionX < this.ennemysCurrentPositionX + this.ennemyWidth &&
             this.lazerCurrentPositionX + this.lazerWidth > this.ennemysCurrentPositionX &&
             this.lazerCurrentPositionY < this.ennemysCurrentPositionY + this.ennemyHeight &&
             this.lazerCurrentPositionY + this.lazerHeight > this.ennemysCurrentPositionY) {
-            console.log('Collision :)');
-            console.log(`Laser (X/Y/W/H) : ${this.lazerCurrentPositionX} / ${this.lazerCurrentPositionY} / ${this.lazerWidth} / ${this.lazerHeight}`);
-            console.log(`Ennemi (X/Y/W/H) : ${this.ennemysCurrentPositionX} / ${this.ennemysCurrentPositionY} / ${this.ennemyWidth} / ${this.ennemyHeight}`);
             return true;
         }
         return false;
@@ -147,13 +165,23 @@ export class CollisionElements {
         this.ennemysCurrentPositionY = ennemyElement.getBoundingClientRect().top;
     }
 
-    public setIndexOnCollide(numb: number):void{
+    //Enregistre l'index de l'élément touché par le laser 
+    private setIndexOnCollide(numb: number): void {
         this.ennemyIndex = numb;
     }
 
     //Retourne l'index de l'élément touché par le laser 
-    public getIndexOnCollide():number{
+    public getIndexOnCollide(): number {
         return this.ennemyIndex;
+    }
+
+    private setLazerIndexOnCollide(numb:number):void{
+        this.lazerIndex = numb;
+    }
+
+    //Retourne l'index du laser ayant touché l'élément 
+    public getLazerIndexOnCollide():number {
+        return this.lazerIndex;
     }
 
 

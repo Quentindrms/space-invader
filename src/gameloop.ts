@@ -76,17 +76,34 @@ export class GameLoop {
     }
 
     // Mise à jour de la logiqueÒ du jeu
+    // Remplacez votre méthode update() par celle-ci :
+
     update(dt: number) {
-        this.player.updateLasers(dt);
+        // Mettre à jour les positions des lasers et du joueur
+        this.player.updateLasers(dt, null);
         this.player.updatePlayerPosition();
+
+        // Vérifier la collision avec la ligne de base (ennemi atteint le joueur)
         if (this.collisionWithBaseLine.collideWithBaseLineHitBox() == true) {
             this.ennemyContainer.canMoove = false;
         }
-        this.collisionElements.checkPosition();
-        if(this.collisionElements.getCollision() == true){
-            console.log(`Index on collide : ${this.collisionElements.getIndexOnCollide()}`);
+
+        // Vérifier les collisions laser-ennemi
+        // checkPosition() retourne maintenant true si une collision est détectée
+        if (this.collisionElements.checkPosition()) {
+
+            // Récupérer l'index de l'ennemi touché
+            const hitEnemyIndex = this.collisionElements.getIndexOnCollide();
+
+            // Appeler la méthode pour gérer la collision
+            this.player.updateLasers(dt, this.collisionElements.getLazerIndexOnCollide());
+            this.ennemyContainer.asCollideWithLazer(hitEnemyIndex);
+
+            // Optionnel : vous pourriez aussi supprimer le laser qui a touché
+            // this.player.removeLaserThatHit(); // À implémenter si nécessaire
         }
     }
+
 
     // Mise à jour des éléments du DOM
     updateDOM() {

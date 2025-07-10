@@ -91,30 +91,47 @@ export class Player {
     addToArrayBeam(element) {
         this.arrayBeam.push(element);
     }
+    getArrayBeam() {
+        return this.arrayBeam;
+    }
     removeFromArrayBeam(element) {
         const index = this.arrayBeam.indexOf(element);
         if (index !== -1) {
             this.arrayBeam.splice(index, 1);
         }
     }
-    getArrayBeam() {
-        return this.arrayBeam;
+    removeToArrayBeam(index) {
+        this.arrayBeam.splice(index, 1);
     }
-    updateLasers(dt) {
+    removeFromDOM(index) {
+        this.arrayBeam[index].style.display = 'none';
+    }
+    // Version corrigée et simplifiée
+    updateLasers(dt, collidedLaserIndex) {
         const speed = 500; // px/s
         const delta = speed * (dt / 1000);
+        // On boucle à l'envers car on modifie la longueur du tableau
         for (let i = this.arrayBeam.length - 1; i >= 0; i--) {
             const beam = this.arrayBeam[i];
+            // Cas 1 : Le laser en cours de vérification est celui qui est entré en collision
+            if (i === collidedLaserIndex) {
+                beam.remove(); // Supprime du DOM
+                this.arrayBeam.splice(i, 1); // Supprime du tableau
+                continue; // Passe au laser suivant
+            }
+            // Cas 2 : Le laser n'est pas en collision, on met à jour sa position
             const y = parseFloat(beam.style.top);
             const newY = y - delta;
             beam.style.top = `${newY}px`;
+            // Cas 3 : Le laser sort de l'écran
             if (newY <= 0) {
-                console.log(this.arrayBeam);
-                beam.remove();
-                this.removeFromArrayBeam(beam);
-                console.log('Suppression du lazer, affichage des lazer contenus dans le tableau');
+                beam.remove(); // Supprime du DOM
+                this.arrayBeam.splice(i, 1); // Supprime du tableau
             }
         }
+    }
+    lazerAsCollide(bool) {
+        return bool;
     }
 }
 export class Lazer {

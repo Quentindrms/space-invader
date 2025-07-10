@@ -36,7 +36,6 @@ export class Ennemys {
                     this.hitBox.style.width = `${this.witdh}px`;
                     this.hitBox.style.height = '10px';
                     ennemyElement.appendChild(this.hitBox);
-                    console.log(`${i} éléménts crées sur ${numberOf}`);
                     this.addToArrayEnnemy(ennemyElement);
                 }
             }
@@ -44,9 +43,14 @@ export class Ennemys {
     }
     //Ajoute un élément dans le tableau
     addToArrayEnnemy(element) {
-        console.log(`${element} ajouté au tableau`);
         this.arrayEnnemy.push(element);
-        console.log(this.getArrayEnnemy());
+    }
+    removeEnnemyDOM(index) {
+        this.arrayEnnemy[index].style.display = 'none';
+    }
+    removeToArrayEnnemy(index) {
+        this.removeEnnemyDOM(index);
+        this.arrayEnnemy.splice(index, 1);
     }
     getArrayEnnemy() {
         return this.arrayEnnemy;
@@ -138,5 +142,9 @@ export class EnnemyContainer {
     }
     getArrayEnnemy() {
         return this.ennemy.getArrayEnnemy();
+    }
+    asCollideWithLazer(index) {
+        console.log(`Suppression de l'ennemi ${index}`);
+        this.ennemy.removeToArrayEnnemy(index);
     }
 }
