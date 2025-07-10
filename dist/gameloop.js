@@ -52,15 +52,12 @@ export class GameLoop {
             this.ennemyContainer.canMoove = false;
         }
         // Vérifier les collisions laser-ennemi
-        // checkPosition() retourne maintenant true si une collision est détectée
         if (this.collisionElements.checkPosition()) {
             // Récupérer l'index de l'ennemi touché
             const hitEnemyIndex = this.collisionElements.getIndexOnCollide();
             // Appeler la méthode pour gérer la collision
             this.player.updateLasers(dt, this.collisionElements.getLazerIndexOnCollide());
             this.ennemyContainer.asCollideWithLazer(hitEnemyIndex);
-            // Optionnel : vous pourriez aussi supprimer le laser qui a touché
-            // this.player.removeLaserThatHit(); // À implémenter si nécessaire
         }
     }
     // Mise à jour des éléments du DOM

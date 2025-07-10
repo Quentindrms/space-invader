@@ -41,13 +41,14 @@ export class PlayerCollision {
         this.collideWithBaseLineHitBox();
     }
 
+    //Récupère la position des éléments à comparer 
     private setPosition(targetA: HTMLElement, targetB: HTMLElement): void {
         this.target_A_current_X_position = targetA.getBoundingClientRect().left;
         this.target_A_current_Y_position = targetA.getBoundingClientRect().top;
         this.target_B_current_X_position = targetB.getBoundingClientRect().left;
         this.target_B_current_Y_position = targetB.getBoundingClientRect().top;
     }
-
+    //En cas de collision des ennemis avec la hitbox arrête le mouvement 
     public collideWithBaseLineHitBox(): boolean {
         if (this.target_A_element != null && this.target_B_element != null) {
             this.setPosition(this.target_A_element, this.target_B_element);
@@ -91,6 +92,10 @@ export class CollisionElements {
         this.ennemyIndex = 0;
     }
 
+    /** Vérifie si une collision entre le laser et les ennemis ont lieu
+     * Créer une paire laser/ennemis et la compare avec testCollisionsForCurrentPair
+     */
+
     checkPosition() {
         // Parcourir tous les ennemis
         for (let ennemyIndex = 0; ennemyIndex < this.arrayOfEnnemys.length; ennemyIndex++) {
@@ -116,7 +121,7 @@ export class CollisionElements {
                         this.lazerWidth = currentLazer.getBoundingClientRect().width;
                         this.lazerHeight = currentLazer.getBoundingClientRect().height;
 
-                        // MAINTENANT on teste la collision pour cette paire spécifique
+                        // Test de la la paire laser/ennemi
                         if (this.testCollisionForCurrentPair()) {
 
                             // Stocker l'index de l'ennemi touché
@@ -135,9 +140,7 @@ export class CollisionElements {
         return false;
     }
 
-    // setInformation et setPosition sont désormais gérés directement dans checkPosition
-    // pour une meilleure clarté et pour éviter les problèmes d'ordre d'appel ou de paramètres.
-    // Tu peux les supprimer si tu ne les utilises plus ailleurs.
+//Enregistre la dimmension des éléments testés
     private setInformation(lazerElement: HTMLElement, ennemyElement: HTMLElement): void {
         this.lazerWidth = lazerElement.getBoundingClientRect().width;
         this.lazerHeight = lazerElement.getBoundingClientRect().height;
@@ -146,6 +149,7 @@ export class CollisionElements {
         this.ennemyHeight = ennemyElement.getBoundingClientRect().height;
     }
 
+//Test la collision avec la pair laser/ennemis
     private testCollisionForCurrentPair(): boolean {
         // Utiliser l'algorithme AABB (Axis-Aligned Bounding Box)
         if (this.lazerCurrentPositionX < this.ennemysCurrentPositionX + this.ennemyWidth &&
@@ -157,6 +161,7 @@ export class CollisionElements {
         return false;
     }
 
+//Enregistre la position des éléments à comparer 
     private setPosition(lazerElement: HTMLElement, ennemyElement: HTMLElement): void {
         this.lazerCurrentPositionX = lazerElement.getBoundingClientRect().left;
         this.lazerCurrentPositionY = lazerElement.getBoundingClientRect().top;
@@ -175,6 +180,7 @@ export class CollisionElements {
         return this.ennemyIndex;
     }
 
+    //Lorsqu'une collision est détectée, enregistre quel laser a touché 
     private setLazerIndexOnCollide(numb:number):void{
         this.lazerIndex = numb;
     }

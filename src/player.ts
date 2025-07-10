@@ -109,6 +109,7 @@ export class Player {
     }
   }
 
+  //Si le joueur touche un des bords l'empêche de sortir du cadre 
   borderCollide(yPos: number, speed: number, direction: string): boolean {
     if (yPos - speed <= 0 && direction === "left") {
       return true;
@@ -122,6 +123,7 @@ export class Player {
     }
   }
 
+  //Quand un laser est tiré l'enregistre dans le tableau
   private addToArrayBeam(element: HTMLElement): void {
     this.arrayBeam.push(element);
   }
@@ -129,23 +131,19 @@ export class Player {
   public getArrayBeam(): HTMLElement[] {
     return this.arrayBeam;
   }
-
-    private removeFromArrayBeam(element: HTMLElement): void {
-    const index = this.arrayBeam.indexOf(element);
-    if (index !== -1) {
-      this.arrayBeam.splice(index, 1);
-    }
-  }
   
   private removeToArrayBeam(index: number){
     this.arrayBeam.splice(index, 1);
   }
 
   private removeFromDOM(index:number){
-    this.arrayBeam[index].style.display = 'none';
+    this.arrayBeam[index].remove;
   }
 
- // Version corrigée et simplifiée
+/** Met à jour le laser à la fréquence indiquée par le delta time et le déplace 
+ * dans le DOM du nombre de pixel indiqué dans la variable 'speed'
+ * Parcours 
+ */
 updateLasers(dt: number, collidedLaserIndex: number | null): void {
   const speed = 500; // px/s
   const delta = speed * (dt / 1000);
@@ -156,20 +154,20 @@ updateLasers(dt: number, collidedLaserIndex: number | null): void {
 
     // Cas 1 : Le laser en cours de vérification est celui qui est entré en collision
     if (i === collidedLaserIndex) {
-      beam.remove(); // Supprime du DOM
-      this.arrayBeam.splice(i, 1); // Supprime du tableau
+      beam.remove(); 
+      this.arrayBeam.splice(i, 1);
       continue; // Passe au laser suivant
     }
 
-    // Cas 2 : Le laser n'est pas en collision, on met à jour sa position
+    // Cas 2 : Le laser n'est pas en collision, met à jour sa position
     const y = parseFloat(beam.style.top);
     const newY = y - delta;
     beam.style.top = `${newY}px`;
 
     // Cas 3 : Le laser sort de l'écran
     if (newY <= 0) {
-      beam.remove(); // Supprime du DOM
-      this.arrayBeam.splice(i, 1); // Supprime du tableau
+      beam.remove(); 
+      this.arrayBeam.splice(i, 1);
     }
   }
 }
