@@ -1,31 +1,33 @@
 // La classe PlayerCollision n'est pas modifiée ici, car la question porte sur la collision laser-ennemis
 export class PlayerCollision {
-    constructor(targetA, targetB, targetAObj, targetBobj) {
-        this.target_A_current_X_position = 0;
-        this.target_A_current_Y_position = 0;
-        this.target_B_current_X_position = 0;
-        this.target_B_current_Y_position = 0;
-        this.target_A_element = targetA;
-        this.target_B_element = targetB;
-        this.target_A_obj = targetAObj;
-        this.target_B_obj = targetBobj;
+    constructor(player, ennemy, targetAObj, targetBobj) {
+        this.player_current_X_position = 0;
+        this.player_current_Y_position = 0;
+        this.ennemy_current_X_position = 0;
+        this.ennemy_current_Y_position = 0;
+        this.ennemy_bottom_position = 0;
+        this.player_element = player;
+        this.ennemy_element = ennemy;
+        this.player_obj = targetAObj;
+        this.ennemy_obj = targetBobj;
         this.refresh_rate = 1000;
         this.intervalID = 0;
         this.isInMove = true;
         this.collideWithBaseLineHitBox();
     }
     //Récupère la position des éléments à comparer 
-    setPosition(targetA, targetB) {
-        this.target_A_current_X_position = targetA.getBoundingClientRect().left;
-        this.target_A_current_Y_position = targetA.getBoundingClientRect().top;
-        this.target_B_current_X_position = targetB.getBoundingClientRect().left;
-        this.target_B_current_Y_position = targetB.getBoundingClientRect().top;
+    setPosition(player, ennemy) {
+        this.player_current_X_position = player.getBoundingClientRect().left;
+        this.player_current_Y_position = player.getBoundingClientRect().top;
+        this.ennemy_current_X_position = ennemy.getBoundingClientRect().left;
+        this.ennemy_current_Y_position = ennemy.getBoundingClientRect().top;
+        this.ennemy_bottom_position = ennemy.getBoundingClientRect().bottom;
     }
     //En cas de collision des ennemis avec la hitbox arrête le mouvement 
     collideWithBaseLineHitBox() {
-        if (this.target_A_element != null && this.target_B_element != null) {
-            this.setPosition(this.target_A_element, this.target_B_element);
-            if (this.target_A_current_Y_position >= this.target_B_current_Y_position) {
+        if (this.player_element != null && this.ennemy_element != null) {
+            this.setPosition(this.player_element, this.ennemy_element);
+            if (this.ennemy_bottom_position >= this.player_current_Y_position) {
                 return true;
             }
         }

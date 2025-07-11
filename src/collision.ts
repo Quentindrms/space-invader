@@ -4,16 +4,18 @@ import { Lazer, Player } from './player.js';
 
 // La classe PlayerCollision n'est pas modifiée ici, car la question porte sur la collision laser-ennemis
 export class PlayerCollision {
-    target_A_current_X_position: number;
-    target_A_current_Y_position: number;
-    target_B_current_X_position: number;
-    target_B_current_Y_position: number;
+    player_current_X_position: number;
+    player_current_Y_position: number;
 
-    target_A_element: HTMLElement | null;
-    target_B_element: HTMLElement | null;
+    ennemy_current_X_position: number;
+    ennemy_current_Y_position: number;
+    ennemy_bottom_position: number;
 
-    target_A_obj: EnnemyContainer;
-    target_B_obj: Object;
+    player_element: HTMLElement | null;
+    ennemy_element: HTMLElement | null;
+
+    player_obj: EnnemyContainer;
+    ennemy_obj: Object;
 
     isInMove: boolean;
 
@@ -21,17 +23,19 @@ export class PlayerCollision {
 
     intervalID: number;
 
-    constructor(targetA: HTMLElement, targetB: HTMLElement, targetAObj: EnnemyContainer, targetBobj: Object) {
-        this.target_A_current_X_position = 0;
-        this.target_A_current_Y_position = 0;
-        this.target_B_current_X_position = 0;
-        this.target_B_current_Y_position = 0;
+    constructor(player: HTMLElement, ennemy: HTMLElement, targetAObj: EnnemyContainer, targetBobj: Object) {
+        this.player_current_X_position = 0;
+        this.player_current_Y_position = 0;
 
-        this.target_A_element = targetA;
-        this.target_B_element = targetB;
+        this.ennemy_current_X_position = 0;
+        this.ennemy_current_Y_position = 0;
+        this.ennemy_bottom_position = 0;
 
-        this.target_A_obj = targetAObj;
-        this.target_B_obj = targetBobj;
+        this.player_element = player;
+        this.ennemy_element = ennemy;
+
+        this.player_obj = targetAObj;
+        this.ennemy_obj = targetBobj;
 
         this.refresh_rate = 1000;
         this.intervalID = 0;
@@ -42,17 +46,18 @@ export class PlayerCollision {
     }
 
     //Récupère la position des éléments à comparer 
-    private setPosition(targetA: HTMLElement, targetB: HTMLElement): void {
-        this.target_A_current_X_position = targetA.getBoundingClientRect().left;
-        this.target_A_current_Y_position = targetA.getBoundingClientRect().top;
-        this.target_B_current_X_position = targetB.getBoundingClientRect().left;
-        this.target_B_current_Y_position = targetB.getBoundingClientRect().top;
+    private setPosition(player: HTMLElement, ennemy: HTMLElement): void {
+        this.player_current_X_position = player.getBoundingClientRect().left;
+        this.player_current_Y_position = player.getBoundingClientRect().top;
+        this.ennemy_current_X_position = ennemy.getBoundingClientRect().left;
+        this.ennemy_current_Y_position = ennemy.getBoundingClientRect().top;
+        this.ennemy_bottom_position = ennemy.getBoundingClientRect().bottom;
     }
     //En cas de collision des ennemis avec la hitbox arrête le mouvement 
     public collideWithBaseLineHitBox(): boolean {
-        if (this.target_A_element != null && this.target_B_element != null) {
-            this.setPosition(this.target_A_element, this.target_B_element);
-            if (this.target_A_current_Y_position >= this.target_B_current_Y_position) {
+        if (this.player_element != null && this.ennemy_element != null) {
+            this.setPosition(this.player_element, this.ennemy_element);
+            if (this.ennemy_bottom_position >= this.player_current_Y_position) {
                 return true;
             }
         }

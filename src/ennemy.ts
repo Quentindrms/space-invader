@@ -115,14 +115,14 @@ export class EnnemyContainer {
         this.ennemyContainerHeight = `${document.getElementById('gameTarget')?.style.width}px`;
         this.ennemyContainerDisplay = 'flex';
         this.ennemyContainerPosition = 'absolute';
-        this.ennemyContainerTop = `25px`;
-        this.ennemyContainerGap = '15px';
+        this.ennemyContainerTop = `15px`;
+        this.ennemyContainerGap = '35px';
         this.ennemyContainerPositionY = 0;
         this.bounceOnBorder = 0;
 
         this.ennemyContainerSizeLeft = 0;
         this.direction = 1;
-        this.speed = 20;
+        this.speed = 10;
         this.canMoove = true;
 
         this.ennemyContainerElement = document.createElement('div');
