@@ -20,6 +20,8 @@ export class Player {
   baselineHitBox: HTMLElement;
 
   arrayBeam: HTMLElement[];
+  coolDown: number;
+  timeStamp: number;
 
   constructor(witdh: string, heigth: string, color: string) {
     this.witdh = witdh + "px";
@@ -50,6 +52,8 @@ export class Player {
     this.baselineHitBox.style.borderTopColor = "pink";
 
     this.arrayBeam = [];
+    this.coolDown = 1000; //Temps en miliseconde
+    this.timeStamp = 0;
   }
 
   createPlayer(target: HTMLElement | null): void {
@@ -103,13 +107,17 @@ export class Player {
 
   playerShot(action: KeyboardEvent) {
     if (action.key === " ") {
-      const lazer = new Lazer(this.player, this.playerPositionY);
       action.preventDefault();
-      this.addToArrayBeam(lazer.beam);
+      if(Date.now() - this.timeStamp > this.coolDown){
+        const lazer = new Lazer(this.player);
+        this.addToArrayBeam(lazer.beam);
+        // La ligne manquante est ici :
+        this.timeStamp = Date.now();
+      }
     }
   }
 
-  //Si le joueur touche un des bords l'empêche de sortir du cadre 
+  //Si le joueur touche un des bords l'empêche de sortir du cadre
   borderCollide(yPos: number, speed: number, direction: string): boolean {
     if (yPos - speed <= 0 && direction === "left") {
       return true;
@@ -131,46 +139,46 @@ export class Player {
   public getArrayBeam(): HTMLElement[] {
     return this.arrayBeam;
   }
-  
-  private removeToArrayBeam(index: number){
+
+  private removeToArrayBeam(index: number) {
     this.arrayBeam.splice(index, 1);
   }
 
-  private removeFromDOM(index:number){
+  private removeFromDOM(index: number) {
     this.arrayBeam[index].remove;
   }
 
-/** Met à jour le laser à la fréquence indiquée par le delta time et le déplace 
- * dans le DOM du nombre de pixel indiqué dans la variable 'speed'
- * Parcours 
- */
-updateLasers(dt: number, collidedLaserIndex: number | null): void {
-  const speed = 200; // px/s
-  const delta = speed * (dt / 1000);
+  /** Met à jour le laser à la fréquence indiquée par le delta time et le déplace
+   * dans le DOM du nombre de pixel indiqué dans la variable 'speed'
+   * Parcours
+   */
+  updateLasers(dt: number, collidedLaserIndex: number | null): void {
+    const speed = 200; // px/s
+    const delta = speed * (dt / 1000);
 
-  // On boucle à l'envers car on modifie la longueur du tableau
-  for (let i = this.arrayBeam.length - 1; i >= 0; i--) {
-    const beam = this.arrayBeam[i];
+    // On boucle à l'envers car on modifie la longueur du tableau
+    for (let i = this.arrayBeam.length - 1; i >= 0; i--) {
+      const beam = this.arrayBeam[i];
 
-    // Cas 1 : Le laser en cours de vérification est celui qui est entré en collision
-    if (i === collidedLaserIndex) {
-      beam.remove(); 
-      this.arrayBeam.splice(i, 1);
-      continue; // Passe au laser suivant
-    }
+      // Cas 1 : Le laser en cours de vérification est celui qui est entré en collision
+      if (i === collidedLaserIndex) {
+        beam.remove();
+        this.arrayBeam.splice(i, 1);
+        continue; // Passe au laser suivant
+      }
 
-    // Cas 2 : Le laser n'est pas en collision, met à jour sa position
-    const y = parseFloat(beam.style.top);
-    const newY = y - delta;
-    beam.style.top = `${newY}px`;
+      // Cas 2 : Le laser n'est pas en collision, met à jour sa position
+      const y = parseFloat(beam.style.top);
+      const newY = y - delta;
+      beam.style.top = `${newY}px`;
 
-    // Cas 3 : Le laser sort de l'écran
-    if (newY <= 0) {
-      beam.remove(); 
-      this.arrayBeam.splice(i, 1);
+      // Cas 3 : Le laser sort de l'écran
+      if (newY <= 0) {
+        beam.remove();
+        this.arrayBeam.splice(i, 1);
+      }
     }
   }
-}
 
   lazerAsCollide(bool: boolean): boolean {
     return bool;
@@ -188,28 +196,43 @@ export class Lazer {
   beamPositionY: number;
   stillOnScreen: boolean;
 
-  constructor(player: HTMLElement, playerPos: number) {
+  constructor(player: HTMLElement) {
     this.width = "5px";
     this.height = "15px";
-    this.backgroundColor = "pink";
+    this.backgroundColor = "yellow";
     this.position = "absolute";
-    this.playerPosition = playerPos;
-    this.beamPositionY = player.getBoundingClientRect().y;
-    this.stillOnScreen = true;
+    this.gameBoard = document.getElementById("gameTarget");
+
+    if (!this.gameBoard) {
+      this.beam = document.createElement('div');
+      this.stillOnScreen = false;
+      this.playerPosition = 0;
+      this.beamPositionY = 0;
+      return;
+    }
+
+    const playerRect = player.getBoundingClientRect();
+    const gameBoardRect = this.gameBoard.getBoundingClientRect();
+    const laserWidth = parseInt(this.width, 10);
+    const laserHeight = parseInt(this.height, 10);
+
+    const top = playerRect.top - gameBoardRect.top - laserHeight;
+    const left = playerRect.left - gameBoardRect.left + (playerRect.width / 2) - (laserWidth / 2);
 
     this.beam = document.createElement("div");
     this.beam.style.width = this.width;
     this.beam.style.height = this.height;
     this.beam.style.backgroundColor = this.backgroundColor;
     this.beam.style.position = this.position;
-    this.beam.style.left = `${this.playerPosition}px`;
-    this.beam.style.top = `${this.beamPositionY}px`;
+    this.beam.style.top = `${top}px`;
+    this.beam.style.left = `${left}px`;
 
-    this.gameBoard = document.getElementById("gameTarget");
-    if (this.gameBoard != null) {
-      this.beam.id = "laser";
-      this.beam.className = "laser";
-      this.gameBoard.appendChild(this.beam);
-    }
+    this.beam.id = "laser";
+    this.beam.className = "laser";
+    this.gameBoard.appendChild(this.beam);
+
+    this.playerPosition = player.getBoundingClientRect().left;
+    this.beamPositionY = player.getBoundingClientRect().top;
+    this.stillOnScreen = true;
   }
 }

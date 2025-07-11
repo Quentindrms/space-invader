@@ -71,7 +71,7 @@ export class Ennemys {
 
     public removeToArrayEnnemy(index: number) {
         this.removeEnnemyDOM(index);
-        this.arrayEnnemy.splice(index, 1);
+        this.arrayEnnemy.splice(index, 80);
     }
 
     public getArrayEnnemy(): HTMLElement[] {
@@ -111,7 +111,7 @@ export class EnnemyContainer {
         this.target = target;
         this.ennemy = new Ennemys();
 
-        this.ennemyContainerWidth = `${target.getBoundingClientRect().width - 250}px`;
+        this.ennemyContainerWidth = `${target.getBoundingClientRect().width-250}px`;
         this.ennemyContainerHeight = `${document.getElementById('gameTarget')?.style.width}px`;
         this.ennemyContainerDisplay = 'flex';
         this.ennemyContainerPosition = 'absolute';

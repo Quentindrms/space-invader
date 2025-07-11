@@ -116,7 +116,7 @@ export class GameLoop {
 
     // Mise à jour des éléments du DOM
     updateDOM() {
-        this.ennemyContainer.containerMove(this.dt, 0.2);
+        this.ennemyContainer.containerMove(this.dt, 0.3);
         //console.log("Update DOM");
     }
 }

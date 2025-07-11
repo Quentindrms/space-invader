@@ -50,7 +50,7 @@ export class Ennemys {
     }
     removeToArrayEnnemy(index) {
         this.removeEnnemyDOM(index);
-        this.arrayEnnemy.splice(index, 1);
+        this.arrayEnnemy.splice(index, 80);
     }
     getArrayEnnemy() {
         return this.arrayEnnemy;

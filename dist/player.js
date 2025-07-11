@@ -25,6 +25,8 @@ export class Player {
         this.baselineHitBox.style.borderTop = "2px";
         this.baselineHitBox.style.borderTopColor = "pink";
         this.arrayBeam = [];
+        this.coolDown = 1000; //Temps en miliseconde
+        this.timeStamp = 0;
     }
     createPlayer(target) {
         if (this.player != null && target != null) {
@@ -72,12 +74,16 @@ export class Player {
     }
     playerShot(action) {
         if (action.key === " ") {
-            const lazer = new Lazer(this.player, this.playerPositionY);
             action.preventDefault();
-            this.addToArrayBeam(lazer.beam);
+            if (Date.now() - this.timeStamp > this.coolDown) {
+                const lazer = new Lazer(this.player);
+                this.addToArrayBeam(lazer.beam);
+                // La ligne manquante est ici :
+                this.timeStamp = Date.now();
+            }
         }
     }
-    //Si le joueur touche un des bords l'empêche de sortir du cadre 
+    //Si le joueur touche un des bords l'empêche de sortir du cadre
     borderCollide(yPos, speed, direction) {
         if (yPos - speed <= 0 && direction === "left") {
             return true;
@@ -135,26 +141,37 @@ export class Player {
     }
 }
 export class Lazer {
-    constructor(player, playerPos) {
+    constructor(player) {
         this.width = "5px";
         this.height = "15px";
-        this.backgroundColor = "pink";
+        this.backgroundColor = "yellow";
         this.position = "absolute";
-        this.playerPosition = playerPos;
-        this.beamPositionY = player.getBoundingClientRect().y;
-        this.stillOnScreen = true;
+        this.gameBoard = document.getElementById("gameTarget");
+        if (!this.gameBoard) {
+            this.beam = document.createElement('div');
+            this.stillOnScreen = false;
+            this.playerPosition = 0;
+            this.beamPositionY = 0;
+            return;
+        }
+        const playerRect = player.getBoundingClientRect();
+        const gameBoardRect = this.gameBoard.getBoundingClientRect();
+        const laserWidth = parseInt(this.width, 10);
+        const laserHeight = parseInt(this.height, 10);
+        const top = playerRect.top - gameBoardRect.top - laserHeight;
+        const left = playerRect.left - gameBoardRect.left + (playerRect.width / 2) - (laserWidth / 2);
         this.beam = document.createElement("div");
         this.beam.style.width = this.width;
         this.beam.style.height = this.height;
         this.beam.style.backgroundColor = this.backgroundColor;
         this.beam.style.position = this.position;
-        this.beam.style.left = `${this.playerPosition}px`;
-        this.beam.style.top = `${this.beamPositionY}px`;
-        this.gameBoard = document.getElementById("gameTarget");
-        if (this.gameBoard != null) {
-            this.beam.id = "laser";
-            this.beam.className = "laser";
-            this.gameBoard.appendChild(this.beam);
-        }
+        this.beam.style.top = `${top}px`;
+        this.beam.style.left = `${left}px`;
+        this.beam.id = "laser";
+        this.beam.className = "laser";
+        this.gameBoard.appendChild(this.beam);
+        this.playerPosition = player.getBoundingClientRect().left;
+        this.beamPositionY = player.getBoundingClientRect().top;
+        this.stillOnScreen = true;
     }
 }
