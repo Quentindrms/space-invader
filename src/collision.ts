@@ -46,9 +46,9 @@ export class PlayerCollision {
     }
 
     //Récupère la position des éléments à comparer 
-    private setPosition(player: HTMLElement, ennemy: HTMLElement): void {
+    public setPosition(player: HTMLElement, ennemy: HTMLElement): void {
         this.player_current_X_position = player.getBoundingClientRect().left;
-        this.player_current_Y_position = player.getBoundingClientRect().top;
+        this.player_current_Y_position = player.getBoundingClientRect().bottom;
         this.ennemy_current_X_position = ennemy.getBoundingClientRect().left;
         this.ennemy_current_Y_position = ennemy.getBoundingClientRect().top;
         this.ennemy_bottom_position = ennemy.getBoundingClientRect().bottom;
@@ -57,7 +57,10 @@ export class PlayerCollision {
     public collideWithBaseLineHitBox(): boolean {
         if (this.player_element != null && this.ennemy_element != null) {
             this.setPosition(this.player_element, this.ennemy_element);
-            if (this.ennemy_bottom_position >= this.player_current_Y_position) {
+            if (this.ennemy_current_Y_position  <= this.player_current_Y_position) {
+                console.log('Collision avec le joueur');
+                console.log(`Ennemis : ${this.ennemy_bottom_position}`)
+                console.log(`Joueur : ${this.player_current_Y_position}`)
                 return true;
             }
         }

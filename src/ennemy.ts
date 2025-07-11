@@ -43,7 +43,7 @@ export class Ennemys {
                     ennemyElement.id = "Ennemi";
                     ennemyElement.style.width = `${this.witdh}px`;
                     ennemyElement.style.height = `${this.height}px`;
-                    ennemyElement.style.backgroundImage = "url('../../img/ennemy.png')";
+                    ennemyElement.style.backgroundImage = "url('./img/ennemy.png')";
                     ennemyElement.style.backgroundSize = 'contain';
                     ennemyElement.style.display = "flex";
                     ennemyElement.style.alignItems = "end";
@@ -143,7 +143,7 @@ export class EnnemyContainer {
 
 
         this.target.appendChild(this.ennemyContainerElement);
-        this.ennemy.createEnnemy(this.ennemyContainerElement, 50); //Insère le nombre d'ennemi désiré
+        this.ennemy.createEnnemy(this.ennemyContainerElement, 70); //Insère le nombre d'ennemi désiré
     }
     /** Déplace le conteneur sur l'axe principale et l'axe secondaire suivant un patern prédéfinit
      * 

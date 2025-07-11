@@ -18,10 +18,14 @@ export class GameLoop {
     plyrShip!: HTMLElement;
     ennemy!: HTMLElement;
 
+    runTheLoop:boolean;
+
     constructor() {
         this.dt = 0;
         this.dtSeconds = 0;
         this.time = Date.now();
+        
+        this.runTheLoop = true;
 
         this.body = document.querySelector("body");
         this.gameContainer = document.getElementById("gameTarget");
@@ -65,6 +69,10 @@ export class GameLoop {
     }
 
     loop() {
+        if(!this.runTheLoop){
+            console.log("Game over - fin de la boucle");
+            return;
+        }
         const now = Date.now();
         this.dt = now - this.time;
         this.dtSeconds = this.dt / 1000;
@@ -79,14 +87,16 @@ export class GameLoop {
     // Mise à jour de la logiqueÒ du jeu
     // Remplacez votre méthode update() par celle-ci :
 
-    update(dt: number) {
+    update(dt:number) {
         // Mettre à jour les positions des lasers et du joueur
         this.player.updateLasers(dt, null);
         this.player.updatePlayerPosition();
+        this.collisionWithBaseLine.setPosition(this.plyrShip, this.ennemy)
 
         // Vérifier la collision avec la ligne de base (ennemi atteint le joueur)
         if (this.collisionWithBaseLine.collideWithBaseLineHitBox() == true) {
             this.ennemyContainer.canMoove = false;
+            this.runTheLoop = false;
         }
 
         // Vérifier les collisions laser-ennemi
@@ -98,13 +108,15 @@ export class GameLoop {
             // Appeler la méthode pour gérer la collision
             this.player.updateLasers(dt, this.collisionElements.getLazerIndexOnCollide());
             this.ennemyContainer.asCollideWithLazer(hitEnemyIndex);
+
+
         }
     }
 
 
     // Mise à jour des éléments du DOM
     updateDOM() {
-        this.ennemyContainer.containerMove(this.dt, 1);
+        this.ennemyContainer.containerMove(this.dt, 0.2);
         //console.log("Update DOM");
     }
 }

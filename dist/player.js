@@ -30,7 +30,7 @@ export class Player {
         if (this.player != null && target != null) {
             this.player.style.width = this.witdh;
             this.player.style.height = this.height;
-            this.player.style.backgroundImage = "url('../../img/player.png')";
+            this.player.style.backgroundImage = "url('./img/player.png')";
             this.player.style.backgroundSize = 'contain';
             this.player.style.display = this.display;
             this.player.style.position = this.position;
@@ -108,7 +108,7 @@ export class Player {
      * Parcours
      */
     updateLasers(dt, collidedLaserIndex) {
-        const speed = 500; // px/s
+        const speed = 200; // px/s
         const delta = speed * (dt / 1000);
         // On boucle à l'envers car on modifie la longueur du tableau
         for (let i = this.arrayBeam.length - 1; i >= 0; i--) {

@@ -11,7 +11,7 @@
   }
   50% {
     transform: scale(1.05); /* Le texte grossit légèrement */
-    opacity: 0.9;           /* Et devient un peu plus transparent */
+    opacity: 0.9;           
   }
   100% {
     transform: scale(1);
@@ -32,7 +32,7 @@ body{
 }
 
 .game-container {
-  border: 2px solid rgb(25, 24, 24);
+  border: 2px solid rgb(11, 176, 11);
   width: 75%;
   height: 500px;
   background-color: rgb(29, 28, 28);
@@ -46,7 +46,7 @@ body{
 
 .play-button{
   padding: 15px;
-  font-size: 5rem;
+  font-size: 3rem;
   border: 4px solid rgb(11, 176, 11);
   color:rgb(11, 176, 11);
   font-family: 'arcadClassic';
@@ -58,6 +58,10 @@ body{
 
 .play-button:hover{
   scale: 1.1;
+}
+
+.keyBiding{
+
 }
 
 h1{
