@@ -9,10 +9,13 @@
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
-    transform: scale(1.05); /* Le texte grossit légèrement */
-    opacity: 0.9;           
+    transform: scale(1.05);
+    /* Le texte grossit légèrement */
+    opacity: 0.9;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -24,8 +27,9 @@
   padding: 0;
 }
 
-body{
-  display:flex;
+body {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   background-color: rgb(29, 28, 28);
 
@@ -35,26 +39,35 @@ body{
   border: 2px solid rgb(11, 176, 11);
   width: 75%;
   height: 500px;
+  position: relative;
   background-color: rgb(29, 28, 28);
-  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: end;
   top: 20%;
+  align-self: center;
 }
 
-.score-container{
+.score-container {
   border: 2px solid rgb(11, 176, 11);
-  display: flex;
-  position: absolute;
+  font-family: 'arcadClassic';
+  font-size: 2rem;
+  color: rgb(11, 176, 11);
+
+  width: fit-content;
+  align-self: center;
+
+  padding: 5px;
+  margin: 10px;
+  display: none;
 }
 
-.play-button{
+.play-button {
   padding: 15px;
   font-size: 3rem;
   border: 4px solid rgb(11, 176, 11);
-  color:rgb(11, 176, 11);
+  color: rgb(11, 176, 11);
   font-family: 'arcadClassic';
   align-items: center;
   align-self: center;
@@ -62,18 +75,18 @@ body{
   cursor: pointer;
 }
 
-.play-button:hover{
+.play-button:hover {
   scale: 1.1;
 }
 
-.keyBiding{
+.keyBiding {}
 
-}
-
-h1{
+.mainTitle {
   font-family: 'arcadClassic';
   color: rgb(11, 176, 11);
-  margin-top: 20px;
+  margin: 20px;
+  text-align: center;
+  display: block;
 }
 
 
@@ -83,10 +96,15 @@ h1{
   font-family: 'arcadClassic';
   align-items: center;
   align-self: center;
-  
+  display: block;
+  margin: 5px;
+
   /* Paramètres de l'animation */
   animation-name: breathe;
-  animation-duration: 4s;       /* Durée d'un cycle complet */
-  animation-timing-function: ease-in-out; /* Courbe de vitesse */
-  animation-iteration-count: infinite; /* Répéter à l'infini */
+  animation-duration: 4s;
+  /* Durée d'un cycle complet */
+  animation-timing-function: ease-in-out;
+  /* Courbe de vitesse */
+  animation-iteration-count: infinite;
+  /* Répéter à l'infini */
 }

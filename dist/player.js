@@ -7,7 +7,7 @@ export class Player {
         this.display = "flex";
         this.align = "";
         this.position = "absolute";
-        this.speed = 15;
+        this.speed = 50;
         this.life = 5;
         this.isAlive = true;
         this.player = document.createElement('div');
@@ -31,6 +31,7 @@ export class Player {
     createPlayer(target) {
         if (this.player != null && target != null) {
             this.player.style.width = this.witdh;
+            this.playerPositionY = target.getBoundingClientRect().width / 2;
             this.player.style.height = this.height;
             this.player.style.backgroundImage = "url('./img/player.png')";
             this.player.style.backgroundSize = 'contain';
@@ -38,7 +39,7 @@ export class Player {
             this.player.style.position = this.position;
             this.player.style.justifyContent = this.align;
             target.appendChild(this.player);
-            this.playerPositionX = this.player.getBoundingClientRect().left;
+            this.playerPositionX = target.getBoundingClientRect().width / 2;
             this.gameBoardSizeLeft = target.getBoundingClientRect().width;
             console.log(`Game board size : ${this.gameBoardSizeLeft}`);
         }
@@ -114,7 +115,7 @@ export class Player {
      * Parcours
      */
     updateLasers(dt, collidedLaserIndex) {
-        const speed = 200; // px/s
+        const speed = 500; // px/s
         const delta = speed * (dt / 1000);
         // On boucle à l'envers car on modifie la longueur du tableau
         for (let i = this.arrayBeam.length - 1; i >= 0; i--) {

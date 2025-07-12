@@ -35,13 +35,15 @@ export class GameLoop {
         }
         this.scoreArea = document.getElementById('scoreContainer');
         if (this.scoreArea != null) {
-            this.scoreArea.innerText = `${this.score}`;
+            this.scoreArea.innerText = `Score = ${this.score}`;
+            this.scoreArea.style.display = 'block';
         }
         requestAnimationFrame(() => this.loop());
     }
     loop() {
         if (!this.runTheLoop) {
             console.log("Game over - fin de la boucle");
+            this.gameOver();
             return;
         }
         const now = Date.now();
@@ -70,11 +72,24 @@ export class GameLoop {
             this.player.updateLasers(dt, this.collisionElements.getLazerIndexOnCollide());
             this.ennemyContainer.asCollideWithLazer(hitEnemyIndex);
             this.score += 50;
-            console.log(`Score: ${this.score}`);
+            if (this.scoreArea != null) {
+                this.scoreArea.innerText = `Score = ${this.score}`;
+            }
         }
     }
     // Mise à jour des éléments du DOM
     updateDOM() {
-        this.ennemyContainer.containerMove(this.dt, 1);
+        this.ennemyContainer.containerMove(this.dt, 0.25);
+    }
+    gameOver() {
+        var _a;
+        this.plyrShip.remove();
+        this.ennemy.remove();
+        const gameOver = document.createElement('h2');
+        const score = document.createElement('h2');
+        gameOver.innerText = "Game Over";
+        gameOver.className = "main-title-text";
+        score.className = "main-title-text";
+        (_a = this.gameContainer) === null || _a === void 0 ? void 0 : _a.appendChild(gameOver);
     }
 }

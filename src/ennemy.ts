@@ -170,6 +170,8 @@ export class EnnemyContainer {
         const maxX = gameTargetRect.width - containerRect.width;
         const minX = 10;
 
+        const speedDown = 1;
+
         // Déplacement selon la direction
         if (this.canMoove == true) {
             positionX += Math.round(((speed * deltaTime) * this.direction));
@@ -182,7 +184,7 @@ export class EnnemyContainer {
             positionX = maxX;
             this.bounceOnBorder += 1
             if (this.bounceOnBorder == 3) {
-                positionY += (speed * deltaTime);
+                positionY += (speedDown * deltaTime);
                 this.bounceOnBorder = 0;
             }
         }
@@ -191,7 +193,7 @@ export class EnnemyContainer {
             positionX = minX;
             this.bounceOnBorder += 1;
             if (this.bounceOnBorder == 3) {
-                positionY += (speed * deltaTime);
+                positionY += (speedDown * deltaTime);
                 this.bounceOnBorder = 0;
             }
         }

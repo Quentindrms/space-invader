@@ -74,7 +74,8 @@ export class GameLoop {
 
         this.scoreArea = document.getElementById('scoreContainer');
         if (this.scoreArea != null) {
-            this.scoreArea.innerText = `${this.score}`;
+            this.scoreArea.innerText = `Score = ${this.score}`;
+            this.scoreArea.style.display = 'block';
         }
 
         requestAnimationFrame(() => this.loop());
@@ -83,6 +84,7 @@ export class GameLoop {
     loop() {
         if (!this.runTheLoop) {
             console.log("Game over - fin de la boucle");
+            this.gameOver();
             return;
         }
         const now = Date.now();
@@ -118,13 +120,27 @@ export class GameLoop {
             this.ennemyContainer.asCollideWithLazer(hitEnemyIndex);
 
             this.score += 50;
-            console.log(`Score: ${this.score}`)
+            if (this.scoreArea != null) {
+                this.scoreArea.innerText = `Score = ${this.score}`;
+            }
         }
     }
 
-
     // Mise à jour des éléments du DOM
     updateDOM() {
-        this.ennemyContainer.containerMove(this.dt, 1);
+        this.ennemyContainer.containerMove(this.dt, 0.25);
+    }
+
+    gameOver(){
+        this.plyrShip.remove();
+        this.ennemy.remove();
+        const gameOver = document.createElement('h2');
+        const score = document.createElement('h2');
+        gameOver.innerText = "Game Over";
+        gameOver.className = "main-title-text";
+        score.className = "main-title-text";
+        this.gameContainer?.appendChild(gameOver);
     }
 }
+
+
