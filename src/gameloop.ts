@@ -18,20 +18,27 @@ export class GameLoop {
     plyrShip!: HTMLElement;
     ennemy!: HTMLElement;
 
-    runTheLoop:boolean;
+    runTheLoop: boolean;
+
+    score: number;
+    scoreArea!: HTMLElement | null;
 
     constructor() {
         this.dt = 0;
         this.dtSeconds = 0;
         this.time = Date.now();
-        
+
         this.runTheLoop = true;
+        this.score = 0;
 
         this.body = document.querySelector("body");
         this.gameContainer = document.getElementById("gameTarget");
         this.plyrShip = document.createElement("div");
         this.ennemy = document.createElement("div");
         this.plyrShip.id = "plyrShip";
+
+
+
 
         /** Créer l'objet joueur et le fait apparaître à l'écran, lui ajoute une hitbox */
         this.player = new Player("50", "50", "white");
@@ -65,11 +72,16 @@ export class GameLoop {
             );
         }
 
+        this.scoreArea = document.getElementById('scoreContainer');
+        if (this.scoreArea != null) {
+            this.scoreArea.innerText = `${this.score}`;
+        }
+
         requestAnimationFrame(() => this.loop());
     }
 
     loop() {
-        if(!this.runTheLoop){
+        if (!this.runTheLoop) {
             console.log("Game over - fin de la boucle");
             return;
         }
@@ -83,40 +95,36 @@ export class GameLoop {
         this.time = now;
         requestAnimationFrame(() => this.loop());
     }
-
-    // Mise à jour de la logiqueÒ du jeu
-    // Remplacez votre méthode update() par celle-ci :
-
-    update(dt:number) {
+    update(dt: number) {
         // Mettre à jour les positions des lasers et du joueur
         this.player.updateLasers(dt, null);
         this.player.updatePlayerPosition();
         this.collisionWithBaseLine.setPosition(this.plyrShip, this.ennemy)
 
-        // Vérifier la collision avec la ligne de base (ennemi atteint le joueur)
+        // Vérifie la collision avec la ligne de base (ennemi atteint le joueur)
         if (this.collisionWithBaseLine.collideWithBaseLineHitBox() == true) {
             this.ennemyContainer.canMoove = false;
             this.runTheLoop = false;
         }
 
-        // Vérifier les collisions laser-ennemi
+        // Vérifie les collisions laser-ennemi
         if (this.collisionElements.checkPosition()) {
 
-            // Récupérer l'index de l'ennemi touché
+            // Récupére l'index de l'ennemi touché
             const hitEnemyIndex = this.collisionElements.getIndexOnCollide();
 
-            // Appeler la méthode pour gérer la collision
+            // Appele la méthode pour gérer la collision
             this.player.updateLasers(dt, this.collisionElements.getLazerIndexOnCollide());
             this.ennemyContainer.asCollideWithLazer(hitEnemyIndex);
 
-
+            this.score += 50;
+            console.log(`Score: ${this.score}`)
         }
     }
 
 
     // Mise à jour des éléments du DOM
     updateDOM() {
-        this.ennemyContainer.containerMove(this.dt, 0.3);
-        //console.log("Update DOM");
+        this.ennemyContainer.containerMove(this.dt, 1);
     }
 }

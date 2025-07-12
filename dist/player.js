@@ -25,7 +25,7 @@ export class Player {
         this.baselineHitBox.style.borderTop = "2px";
         this.baselineHitBox.style.borderTopColor = "pink";
         this.arrayBeam = [];
-        this.coolDown = 1000; //Temps en miliseconde
+        this.coolDown = 500; //Temps en miliseconde
         this.timeStamp = 0;
     }
     createPlayer(target) {
@@ -142,8 +142,8 @@ export class Player {
 }
 export class Lazer {
     constructor(player) {
-        this.width = "5px";
-        this.height = "15px";
+        this.width = "3px";
+        this.height = "2px";
         this.backgroundColor = "yellow";
         this.position = "absolute";
         this.gameBoard = document.getElementById("gameTarget");

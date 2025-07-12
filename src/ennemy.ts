@@ -3,8 +3,6 @@ export class Ennemys {
     canMoove: boolean;
     witdh: number;
     height: number;
-    //numberOf: number;
-    typeOf: HTMLElement;
     target: HTMLElement | null;
     hitBox: HTMLElement | null;
 
@@ -19,9 +17,7 @@ export class Ennemys {
         this.witdh = 25;
         this.height = 25;
         this.canMoove = true;
-        //this.numberOf = numberOf
         this.target = document.getElementById('ennemyContainer');
-        this.typeOf = document.createElement('div');
         if (this.target != null) {
             this.createEnnemy(this.target, 1);
         }
@@ -71,7 +67,7 @@ export class Ennemys {
 
     public removeToArrayEnnemy(index: number) {
         this.removeEnnemyDOM(index);
-        this.arrayEnnemy.splice(index, 80);
+        this.arrayEnnemy.splice(index, 1);
     }
 
     public getArrayEnnemy(): HTMLElement[] {
@@ -95,6 +91,8 @@ export class EnnemyContainer {
     ennemyContainerPositionY: number;
 
     ennemyContainerElement: HTMLElement;
+    ennemyGlobalWidth: number;
+    ennemyNumber: number;
     target: HTMLElement;
 
     ennemy: Ennemys;
@@ -111,14 +109,21 @@ export class EnnemyContainer {
         this.target = target;
         this.ennemy = new Ennemys();
 
-        this.ennemyContainerWidth = `${target.getBoundingClientRect().width-250}px`;
+        this.ennemyContainerGap = '35px';
+        this.ennemyGlobalWidth = this.ennemy.witdh + parseInt(this.ennemyContainerGap, 10);
+        this.ennemyNumber = 1;
+
+
+        this.ennemyContainerWidth = `${this.ennemyGlobalWidth * this.ennemyNumber}px`;
         this.ennemyContainerHeight = `${document.getElementById('gameTarget')?.style.width}px`;
         this.ennemyContainerDisplay = 'flex';
         this.ennemyContainerPosition = 'absolute';
         this.ennemyContainerTop = `15px`;
-        this.ennemyContainerGap = '35px';
+
         this.ennemyContainerPositionY = 0;
         this.bounceOnBorder = 0;
+
+
 
         this.ennemyContainerSizeLeft = 0;
         this.direction = 1;
@@ -131,19 +136,19 @@ export class EnnemyContainer {
 
     /** Créer le conteneur */
     private createContainer() {
-        this.ennemyContainerElement.style.width = `${this.ennemyContainerWidth}`;
+        this.ennemyContainerElement.style.width = `${this.ennemyGlobalWidth}`;
         this.ennemyContainerElement.style.height = this.ennemyContainerHeight;
         this.ennemyContainerElement.style.display = this.ennemyContainerDisplay;
         this.ennemyContainerElement.style.position = this.ennemyContainerPosition;
         this.ennemyContainerElement.style.top = '0px';
         this.ennemyContainerElement.style.left = '0px'
         this.ennemyContainerElement.style.gap = this.ennemyContainerGap;
-        this.ennemyContainerElement.style.flexWrap = 'wrap';
+        this.ennemyContainerElement.style.flexWrap = 'none';
         this.ennemyContainerElement.id = 'ennemyContainer';
 
 
         this.target.appendChild(this.ennemyContainerElement);
-        this.ennemy.createEnnemy(this.ennemyContainerElement, 70); //Insère le nombre d'ennemi désiré
+        this.ennemy.createEnnemy(this.ennemyContainerElement, 1); //Insère le nombre d'ennemi désiré
     }
     /** Déplace le conteneur sur l'axe principale et l'axe secondaire suivant un patern prédéfinit
      * 
@@ -152,6 +157,8 @@ export class EnnemyContainer {
     public containerMove(deltaTime: number, speed: number) {
         let positionX: number = parseInt(this.ennemyContainerElement.style.left || "0", 10);
         let positionY: number = parseInt(this.ennemyContainerElement.style.top || "0", 10);
+
+        this.checkEnnemyNumber(this.ennemy.getArrayEnnemy());
 
         const gameTarget = document.getElementById('gameTarget');
         if (!gameTarget) return;
@@ -191,6 +198,14 @@ export class EnnemyContainer {
 
         this.ennemyContainerElement.style.left = `${positionX}px`;
         this.ennemyContainerElement.style.top = `${positionY}px`;
+    }
+
+    private checkEnnemyNumber(array: HTMLElement[]) {
+        if (array.length == 0) {
+            this.ennemyNumber++;
+            this.ennemy.createEnnemy(this.ennemyContainerElement, this.ennemyNumber);
+            this.ennemyContainerWidth = `${this.ennemyGlobalWidth * this.ennemyNumber}px`;
+        }
     }
 
     public getContainerInformation(): HTMLElement {

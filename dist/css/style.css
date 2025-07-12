@@ -44,6 +44,12 @@ body{
   top: 20%;
 }
 
+.score-container{
+  border: 2px solid rgb(11, 176, 11);
+  display: flex;
+  position: absolute;
+}
+
 .play-button{
   padding: 15px;
   font-size: 3rem;

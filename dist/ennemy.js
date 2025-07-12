@@ -6,9 +6,7 @@ export class Ennemys {
         this.witdh = 25;
         this.height = 25;
         this.canMoove = true;
-        //this.numberOf = numberOf
         this.target = document.getElementById('ennemyContainer');
-        this.typeOf = document.createElement('div');
         if (this.target != null) {
             this.createEnnemy(this.target, 1);
         }
@@ -50,7 +48,7 @@ export class Ennemys {
     }
     removeToArrayEnnemy(index) {
         this.removeEnnemyDOM(index);
-        this.arrayEnnemy.splice(index, 80);
+        this.arrayEnnemy.splice(index, 1);
     }
     getArrayEnnemy() {
         return this.arrayEnnemy;
@@ -67,12 +65,14 @@ export class EnnemyContainer {
         var _a;
         this.target = target;
         this.ennemy = new Ennemys();
-        this.ennemyContainerWidth = `${target.getBoundingClientRect().width - 250}px`;
+        this.ennemyContainerGap = '35px';
+        this.ennemyGlobalWidth = this.ennemy.witdh + parseInt(this.ennemyContainerGap, 10);
+        this.ennemyNumber = 1;
+        this.ennemyContainerWidth = `${this.ennemyGlobalWidth * this.ennemyNumber}px`;
         this.ennemyContainerHeight = `${(_a = document.getElementById('gameTarget')) === null || _a === void 0 ? void 0 : _a.style.width}px`;
         this.ennemyContainerDisplay = 'flex';
         this.ennemyContainerPosition = 'absolute';
         this.ennemyContainerTop = `15px`;
-        this.ennemyContainerGap = '35px';
         this.ennemyContainerPositionY = 0;
         this.bounceOnBorder = 0;
         this.ennemyContainerSizeLeft = 0;
@@ -84,17 +84,17 @@ export class EnnemyContainer {
     }
     /** Créer le conteneur */
     createContainer() {
-        this.ennemyContainerElement.style.width = `${this.ennemyContainerWidth}`;
+        this.ennemyContainerElement.style.width = `${this.ennemyGlobalWidth}`;
         this.ennemyContainerElement.style.height = this.ennemyContainerHeight;
         this.ennemyContainerElement.style.display = this.ennemyContainerDisplay;
         this.ennemyContainerElement.style.position = this.ennemyContainerPosition;
         this.ennemyContainerElement.style.top = '0px';
         this.ennemyContainerElement.style.left = '0px';
         this.ennemyContainerElement.style.gap = this.ennemyContainerGap;
-        this.ennemyContainerElement.style.flexWrap = 'wrap';
+        this.ennemyContainerElement.style.flexWrap = 'none';
         this.ennemyContainerElement.id = 'ennemyContainer';
         this.target.appendChild(this.ennemyContainerElement);
-        this.ennemy.createEnnemy(this.ennemyContainerElement, 70); //Insère le nombre d'ennemi désiré
+        this.ennemy.createEnnemy(this.ennemyContainerElement, 1); //Insère le nombre d'ennemi désiré
     }
     /** Déplace le conteneur sur l'axe principale et l'axe secondaire suivant un patern prédéfinit
      *
@@ -102,6 +102,7 @@ export class EnnemyContainer {
     containerMove(deltaTime, speed) {
         let positionX = parseInt(this.ennemyContainerElement.style.left || "0", 10);
         let positionY = parseInt(this.ennemyContainerElement.style.top || "0", 10);
+        this.checkEnnemyNumber(this.ennemy.getArrayEnnemy());
         const gameTarget = document.getElementById('gameTarget');
         if (!gameTarget)
             return;
@@ -136,6 +137,13 @@ export class EnnemyContainer {
         }
         this.ennemyContainerElement.style.left = `${positionX}px`;
         this.ennemyContainerElement.style.top = `${positionY}px`;
+    }
+    checkEnnemyNumber(array) {
+        if (array.length == 0) {
+            this.ennemyNumber++;
+            this.ennemy.createEnnemy(this.ennemyContainerElement, this.ennemyNumber);
+            this.ennemyContainerWidth = `${this.ennemyGlobalWidth * this.ennemyNumber}px`;
+        }
     }
     getContainerInformation() {
         return this.ennemyContainerElement;
